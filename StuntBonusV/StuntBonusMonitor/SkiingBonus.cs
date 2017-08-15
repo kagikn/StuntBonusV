@@ -27,14 +27,6 @@ namespace StuntBonusV
                 if (!player.ExistsSafe()) { return; }
                 var playerVeh = Game.Player.Character.CurrentVehicle;
 
-                if (playerVeh.ExistsSafe())
-                {
-                    UIContainer mContainer2 = new UIContainer(new Point(0, 0), new Size(500, 80));
-                    mContainer2.Items.Add(new UIText(playerVeh.GetAllWheelAddresses().Any(x => VehicleExtensions.IsRightWheel(x)).ToString(), new Point(0, 80), 0.5f, Color.White, GTA.Font.ChaletLondon, false, true, false));
-                    mContainer2.Items.Add(new UIText(playerVeh.IsInSkiingStunt().ToString(), new Point(0, 100), 0.5f, Color.White, GTA.Font.ChaletLondon, false, true, false));
-                    mContainer2.Draw();
-                }
-
                 if (playerVeh.ExistsSafe() && _currentVehicle != playerVeh)
                 {
                     _currentVehicle = playerVeh;
