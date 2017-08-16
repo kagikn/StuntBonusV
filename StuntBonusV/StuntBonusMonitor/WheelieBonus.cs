@@ -12,7 +12,7 @@ namespace StuntBonusV
 {
     internal static partial class StuntBonusMonitor
     {
-        internal static class WheelieBonus
+        internal class WheelieBonus : StuntBonusScript
         {
             #region setting
 
@@ -34,6 +34,11 @@ namespace StuntBonusV
             static bool _isPerformingWheelie;
             static float _TotalWheelieDistance;
             const int MIN_TIME_TO_EARN_MONEY = 5000;
+
+            protected override void Setup()
+            {
+                Tick += OnTick;
+            }
 
             internal static void OnTick(object o, EventArgs e)
             {

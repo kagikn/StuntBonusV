@@ -12,7 +12,7 @@ namespace StuntBonusV
 {
     internal static partial class StuntBonusMonitor
     {
-        internal static class StoppieBonus
+        internal class StoppieBonus : StuntBonusScript
         {
             #region setting
 
@@ -35,7 +35,12 @@ namespace StuntBonusV
             static float _TotalStoppieDistance;
             const int MIN_TIME_TO_EARN_MONEY = 2000;
 
-            internal static void OnTick(object o, EventArgs e)
+            protected override void Setup()
+            {
+                Tick += OnTick;
+            }
+
+            internal void OnTick(object o, EventArgs e)
             {
                 var player = Game.Player.Character;
                 if (!player.ExistsSafe()) { return; }

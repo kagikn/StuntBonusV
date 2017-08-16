@@ -12,7 +12,7 @@ namespace StuntBonusV
 {
     internal static partial class StuntBonusMonitor
     {
-        internal static class InsaneStuntBonus
+        internal class InsaneStuntBonus : StuntBonusScript
         {
             #region setting
 
@@ -38,6 +38,11 @@ namespace StuntBonusV
             static Vehicle _currentVehicle = null;
             static Vector3 _currentVehiclePos = Vector3.Zero;
             static Vector3 _initVehiclePos = Vector3.Zero;
+
+            protected override void Setup()
+            {
+                Tick += OnTick;
+            }
 
             internal static void OnTick(object o, EventArgs e)
             {

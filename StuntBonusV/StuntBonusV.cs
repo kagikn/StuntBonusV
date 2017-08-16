@@ -13,16 +13,14 @@ using System.Runtime.InteropServices;
 
 namespace StuntBonusV
 {
-    public class StuntBonusV : Script
+    public abstract class StuntBonusScript : Script
     {
-        public StuntBonusV()
+        public StuntBonusScript()
         {
-            Tick += StuntBonusMonitor.InsaneStuntBonus.OnTick;
-            Tick += StuntBonusMonitor.UniqueStuntBonus.OnTick;
-            Tick += StuntBonusMonitor.SkiingBonus.OnTick;
-            Tick += StuntBonusMonitor.WheelieBonus.OnTick;
-            Tick += StuntBonusMonitor.StoppieBonus.OnTick;
-            Interval = 0;
+           Interval = 0;
+           Setup();
         }
+
+        protected abstract void Setup();
     }
 }

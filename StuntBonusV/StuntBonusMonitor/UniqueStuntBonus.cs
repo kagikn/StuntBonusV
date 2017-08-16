@@ -12,7 +12,7 @@ namespace StuntBonusV
 {
     internal static partial class StuntBonusMonitor
     {
-        internal static class UniqueStuntBonus
+        internal class UniqueStuntBonus : StuntBonusScript
         {
             #region setting
 
@@ -37,7 +37,12 @@ namespace StuntBonusV
 
             static int _completedUniqueStuntCount = GtaNativeUtil.GetCompletedUniqueStuntCount();
 
-            internal static void OnTick(object o, EventArgs e)
+            protected override void Setup()
+            {
+                Tick += OnTick;
+            }
+
+            internal void OnTick(object o, EventArgs e)
             {
                 var currentCompletedStuntJumpCount = GtaNativeUtil.GetCompletedUniqueStuntCount();
                 if (_completedUniqueStuntCount < currentCompletedStuntJumpCount)
