@@ -36,7 +36,7 @@ namespace StuntBonusV
 
                 var playerVeh = player.CurrentVehicle;
 
-                if (playerVeh.ExistsSafe() && _currentVehicle != playerVeh)
+                if (playerVeh.ExistsSafe() && playerVeh.IsQualifiedForInsaneStunt() && _currentVehicle != playerVeh)
                 {
                     _currentVehicle = playerVeh;
                     _isStunting = false;
@@ -49,7 +49,7 @@ namespace StuntBonusV
                     return;
                 }
 
-                if (_currentVehicle.IsQualifiedForInsaneStunt())
+                if (!_currentVehicle.IsQualifiedForInsaneStunt())
                 {
                     _isStunting = false;
                     return;
@@ -64,19 +64,19 @@ namespace StuntBonusV
 
                     _currentVehiclePos = playerVeh.Position;
 
-                    if (!playerVeh.IsUpsideDown && _wasFlippedInPrevFrame)
+                    if (!_currentVehicle.IsUpsideDown && _wasFlippedInPrevFrame)
                     {
                         _wasFlippedInPrevFrame = false;
                     }
-                    else if (playerVeh.IsUpsideDown && !_wasFlippedInPrevFrame)
+                    else if (_currentVehicle.IsUpsideDown && !_wasFlippedInPrevFrame)
                     {
                         _stuntFlipCount += 1;
                         _wasFlippedInPrevFrame = true;
                     }
 
-                    if (playerVeh.Heading != _prevVehicleHeading)
+                    if (_currentVehicle.Heading != _prevVehicleHeading)
                     {
-                        var currentHeading = playerVeh.Heading;
+                        var currentHeading = _currentVehicle.Heading;
                         var deltaHeading = Math.Abs(currentHeading - _prevVehicleHeading);
                         _prevVehicleHeading = currentHeading;
 
