@@ -22,9 +22,8 @@ namespace StuntBonusV
                 {
                     return true;
                 }
-
-                public override string SettingFileName { get; } = "SkiingBonus.xml";
             }
+            public override string SettingFileName { get; } = "SkiingBonus.xml";
 
             #endregion
 

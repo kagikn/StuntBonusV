@@ -7,9 +7,8 @@ using System.Xml.Serialization;
 
 namespace StuntBonusV
 {
-    public abstract class Setting
+    public abstract class Setting 
     {
-        public virtual string SettingFileName => null;
         public abstract bool Validate();
     }
 }

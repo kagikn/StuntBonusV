@@ -29,9 +29,8 @@ namespace StuntBonusV
                     if (EnableLastSpecialAward && LastAward <= 0) return false;
                     return true;
                 }
-
-                public override string SettingFileName { get; } = "UniqueStuntBonus.xml";
             }
+            public override string SettingFileName { get; } = "UniqueStuntBonus.xml";
 
             #endregion
 

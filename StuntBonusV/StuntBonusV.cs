@@ -15,6 +15,8 @@ namespace StuntBonusV
 {
     public abstract class StuntBonusScript : Script
     {
+        public virtual string SettingFileName => null;
+
         public StuntBonusScript()
         {
            Interval = 0;

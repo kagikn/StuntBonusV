@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace StuntBonusV
 {
-    public class SettingLoader<T> where T : Setting, new()
+    public class SettingLoader<T> where T : class, new()
     {
         public T Load(string xmlPath)
         {

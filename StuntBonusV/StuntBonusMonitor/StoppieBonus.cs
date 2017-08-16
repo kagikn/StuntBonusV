@@ -22,9 +22,8 @@ namespace StuntBonusV
                 {
                     return true;
                 }
-
-                public override string SettingFileName { get; } = "StoppieBonus.xml";
             }
+            public override string SettingFileName { get; } = "StoppieBonus.xml";
 
             #endregion
 

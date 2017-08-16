@@ -22,9 +22,9 @@ namespace StuntBonusV
                 {
                     return true;
                 }
-
-                public override string SettingFileName { get; } = "WheelieBonus.xml";
+              
             }
+            public override string SettingFileName { get; } = "WheelieBonus.xml";
 
             #endregion
 
