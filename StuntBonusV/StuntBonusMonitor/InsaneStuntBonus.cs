@@ -19,6 +19,7 @@ namespace StuntBonusV
             class InsaneStuntBonusSetting : Setting
             {
                 public bool EnablePerfectLandingDetection { get; set; } = true;
+                public bool UseNotificationsToShowResult { get; set; } = false;
                 public override bool Validate()
                 {
                     return true;

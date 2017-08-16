@@ -22,6 +22,7 @@ namespace StuntBonusV
                 public bool EnableBonusX { get; set; } = true;
                 public bool EnableLastSpecialAward { get; set; } = true;
                 public int LastAward { get; set; } = 250000;
+                public bool UseNotificationsToShowResult { get; set; } = false;
 
                 public override bool Validate()
                 {

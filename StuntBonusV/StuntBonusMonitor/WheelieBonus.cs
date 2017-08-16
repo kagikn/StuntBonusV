@@ -18,6 +18,7 @@ namespace StuntBonusV
 
             class WheelieBonusSetting : Setting
             {
+                public bool UseNotificationsToShowResult { get; set; } = false;
                 public override bool Validate()
                 {
                     return true;
