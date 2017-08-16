@@ -14,6 +14,20 @@ namespace StuntBonusV
     {
         internal static class SkiingBonus
         {
+            #region setting
+
+            class SkiingBonusSetting : Setting
+            {
+                public override bool Validate()
+                {
+                    return true;
+                }
+
+                public override string SettingFileName { get; } = "SkiingBonus.xml";
+            }
+
+            #endregion
+
             static Vehicle _currentVehicle;
             static Vector3 _prevVehiclePos;
             static uint _startTimeOfSkiing;

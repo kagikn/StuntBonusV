@@ -14,6 +14,20 @@ namespace StuntBonusV
     {
         internal static class WheelieBonus
         {
+            #region setting
+
+            class WheelieBonusSetting : Setting
+            {
+                public override bool Validate()
+                {
+                    return true;
+                }
+
+                public override string SettingFileName { get; } = "WheelieBonus.xml";
+            }
+
+            #endregion
+
             static Vehicle _currentVehicle;
             static Vector3 _prevVehiclePos;
             static uint _startTimeOfWheelie;

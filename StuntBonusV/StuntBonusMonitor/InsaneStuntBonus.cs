@@ -14,6 +14,21 @@ namespace StuntBonusV
     {
         internal static class InsaneStuntBonus
         {
+            #region setting
+
+            class InsaneStuntBonusSetting : Setting
+            {
+                public bool EnablePerfectLandingDetection { get; set; } = true;
+                public override bool Validate()
+                {
+                    return true;
+                }
+
+                public override string SettingFileName { get; } = "InsaneStuntBonus.xml";
+            }
+
+            #endregion
+
             static float _stuntTotalRotation = 0;
             static float _prevVehicleHeading = 0;
             static uint _stuntFlipCount = 0;

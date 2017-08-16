@@ -14,6 +14,27 @@ namespace StuntBonusV
     {
         internal static class UniqueStuntBonus
         {
+            #region setting
+
+            class UniqueStuntSetting : Setting
+            {
+                public int BaseAward { get; set; } = 500;
+                public bool EnableBonusX { get; set; } = true;
+                public bool EnableLastSpecialAward { get; set; } = true;
+                public int LastAward { get; set; } = 250000;
+
+                public override bool Validate()
+                {
+                    if (BaseAward <= 0) return false;
+                    if (EnableLastSpecialAward && LastAward <= 0) return false;
+                    return true;
+                }
+
+                public override string SettingFileName { get; } = "UniqueStuntBonus.xml";
+            }
+
+            #endregion
+
             static int _completedUniqueStuntCount = GtaNativeUtil.GetCompletedUniqueStuntCount();
 
             internal static void OnTick(object o, EventArgs e)
