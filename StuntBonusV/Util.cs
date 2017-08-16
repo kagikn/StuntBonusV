@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using GTA;
@@ -50,6 +52,9 @@ namespace StuntBonusV
 
     internal static class Util
     {
+        internal static string DllPath { get; } = Path.GetDirectoryName((new Uri(Assembly.GetExecutingAssembly().CodeBase)).LocalPath);
+        internal static string SettingRootPath { get; } = DllPath + Path.DirectorySeparatorChar + "StuntBonusV";
+
         internal static string[] ToSlicedStrings(string input, int maxByteLengthPerString = 99)
         {
             var utf8ByteCount = Encoding.UTF8.GetByteCount(input);

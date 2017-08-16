@@ -24,5 +24,30 @@ namespace StuntBonusV
         }
 
         protected abstract void Setup();
+
+        protected T LoadSetting<T>() where T : Setting, new()
+        {
+            var settingFilePath = Util.SettingRootPath + Path.DirectorySeparatorChar + SettingFileName;
+            if (string.IsNullOrEmpty(settingFilePath))
+            {
+                throw new InvalidOperationException("The Internal setting path string is empty!");
+            }
+            var loader = new SettingLoader<T>();
+            var setting = loader.Load(settingFilePath);
+
+            return setting.Validate() ? setting : new T();
+        }
+        protected void SaveSetting<T>(T value) where T : Setting, new()
+        {
+            var settingFilePath = Util.SettingRootPath + Path.DirectorySeparatorChar + SettingFileName;
+            if (string.IsNullOrEmpty(settingFilePath))
+            {
+                throw new InvalidOperationException("The Internal setting path string is empty!");
+            }
+            var loader = new SettingLoader<T>();
+            loader.Save(settingFilePath, value);
+
+            //return setting.Validate() ? setting : new T();
+        }
     }
 }
