@@ -180,11 +180,18 @@ namespace StuntBonusV
                 return false;
             }
 
+            int LeftWheelCount, RightWheelCount;
+            vehicle.GetLeftAndRightWheelCount(out LeftWheelCount, out RightWheelCount);
+            if (LeftWheelCount == 0 || RightWheelCount == 0)
+            {
+                return false;
+            }
+
             var wheelPtrs = GetAllWheelAddresses(vehicle);
             var areAllLeftWheelsTouching = true;
             var areAllRightWheelsTouching = true;
-            int touchingLeftWheelCount, touchingRightWheelCount;
-            vehicle.GetLeftAndRightWheelCount(out touchingLeftWheelCount, out touchingRightWheelCount);
+            var touchingLeftWheelCount = LeftWheelCount;
+            var touchingRightWheelCount = RightWheelCount;
 
             foreach (var wheelPtr in wheelPtrs)
             {
@@ -208,7 +215,7 @@ namespace StuntBonusV
                 }
             }
 
-            return (areAllLeftWheelsTouching && touchingRightWheelCount <= 0) || (areAllRightWheelsTouching && touchingLeftWheelCount <= 0);
+            return (areAllLeftWheelsTouching && touchingLeftWheelCount <= 0) || (areAllRightWheelsTouching && touchingLeftWheelCount <= 0);
         }
 
         internal static void GetLeftAndRightWheelCount(this Vehicle vehicle, out int leftWheelCount, out int rightWheelCount)
