@@ -36,7 +36,7 @@ namespace StuntBonusV
 
                 var playerVeh = player.CurrentVehicle;
 
-                if (playerVeh.ExistsSafe() && playerVeh.IsQualifiedForInsaneStunt() && _currentVehicle != playerVeh)
+                if (playerVeh.ExistsSafe() && playerVeh.IsQualifiedForInsaneStunt() && (_currentVehicle == null || _currentVehicle != playerVeh))
                 {
                     _currentVehicle = playerVeh;
                     _isStunting = false;
@@ -49,20 +49,14 @@ namespace StuntBonusV
                     return;
                 }
 
-                if (!_currentVehicle.IsQualifiedForInsaneStunt())
-                {
-                    _isStunting = false;
-                    return;
-                }
-
-                if (_currentVehicle.IsAlive && playerVeh.IsInAir)
+                if (player.IsInVehicle(_currentVehicle) && _currentVehicle.IsAlive && _currentVehicle.IsInAir)
                 {
                     if (!_isStunting)
                     {
-                        InitInsaneStuntVars(playerVeh);
+                        InitInsaneStuntVars(_currentVehicle);
                     }
 
-                    _currentVehiclePos = playerVeh.Position;
+                    _currentVehiclePos = _currentVehicle.Position;
 
                     if (!_currentVehicle.IsUpsideDown && _wasFlippedInPrevFrame)
                     {
@@ -198,13 +192,17 @@ namespace StuntBonusV
 
             static private void InitInsaneStuntVars(Vehicle veh)
             {
+                if (!veh.ExistsSafe())
+                {
+                    return;
+                }
+
                 _stuntTotalRotation = 0;
                 _stuntFlipCount = 0;
                 _wasFlippedInPrevFrame = false;
                 _maxVehicleZPos = float.MinValue;
                 _isStunting = true;
 
-                _currentVehicle = veh;
                 _initVehiclePos = veh.Position;
                 _prevVehicleHeading = veh.Heading;
             }
