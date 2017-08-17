@@ -56,22 +56,22 @@ namespace StuntBonusV
             internal void OnTick(object o, EventArgs e)
             {
                 var player = Game.Player.Character;
-                if (!player.ExistsSafe()) { return; }
+                if (!player.SafeExists()) { return; }
                 var playerVeh = Game.Player.Character.CurrentVehicle;
 
-                if (playerVeh.ExistsSafe() && _currentVehicle != playerVeh)
+                if (playerVeh.SafeExists() && _currentVehicle != playerVeh)
                 {
                     _currentVehicle = playerVeh;
                     _isPerformingStoppie = false;
                 }
-                else if (!_currentVehicle.ExistsSafe())
+                else if (!_currentVehicle.SafeExists())
                 {
                     _currentVehicle = null;
                     _isPerformingStoppie = false;
                     return;
                 }
 
-                if (_currentVehicle.ExistsSafe() && player.IsInVehicle(_currentVehicle))
+                if (_currentVehicle.SafeExists() && player.IsInVehicle(_currentVehicle))
                 {
                     if (_currentVehicle.IsAlive && _currentVehicle.IsInStoppie())
                     {

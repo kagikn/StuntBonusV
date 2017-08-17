@@ -65,7 +65,7 @@ namespace StuntBonusV
             internal void OnTick(object o, EventArgs e)
             {
                 var player = Game.Player.Character;
-                if (!player.ExistsSafe())
+                if (!player.SafeExists())
                 {
                     _isStunting = false;
                     return;
@@ -78,13 +78,13 @@ namespace StuntBonusV
 
                 var playerVeh = player.CurrentVehicle;
 
-                if (playerVeh.ExistsSafe() && playerVeh.IsQualifiedForInsaneStunt() && (_currentVehicle == null || _currentVehicle != playerVeh))
+                if (playerVeh.SafeExists() && playerVeh.IsQualifiedForInsaneStunt() && (_currentVehicle == null || _currentVehicle != playerVeh))
                 {
                     _currentVehicle = playerVeh;
                     _isStunting = false;
                 }
 
-                if (!_currentVehicle.ExistsSafe())
+                if (!_currentVehicle.SafeExists())
                 {
                     _currentVehicle = null;
                     _isStunting = false;
@@ -158,7 +158,7 @@ namespace StuntBonusV
 
             private void ProcessStuntResult(List<InsaneStuntBonusResult> results)
             {
-                results.RemoveAll(x => !x.Vehicle.ExistsSafe() || x.Vehicle.IsDead);
+                results.RemoveAll(x => !x.Vehicle.SafeExists() || x.Vehicle.IsDead);
 
                 var player = Game.Player.Character;
                 var gameTimeNow = (uint)Game.GameTime;
@@ -297,7 +297,7 @@ namespace StuntBonusV
 
             private void InitInsaneStuntVars(Vehicle veh)
             {
-                if (!veh.ExistsSafe())
+                if (!veh.SafeExists())
                 {
                     return;
                 }

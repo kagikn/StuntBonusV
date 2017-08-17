@@ -11,7 +11,7 @@ namespace StuntBonusV
 {
     internal static class Extensions
     {
-        internal static bool ExistsSafe(this Entity entity)
+        internal static bool SafeExists(this Entity entity)
         {
             return entity?.Exists() ?? false;
         }
@@ -281,7 +281,7 @@ namespace StuntBonusV
             unsafe
             {
                 var vehAddress = new IntPtr(vehicle.MemoryAddress);
-                if (vehicle.ExistsSafe() && vehicle.MemoryAddress != null)
+                if (vehicle.SafeExists() && vehicle.MemoryAddress != null)
                 {
                     var modelInfo = Marshal.ReadIntPtr(vehAddress, 0x20);
                     return Marshal.ReadInt32(vehAddress, 0x318) == 0xF;
@@ -296,7 +296,7 @@ namespace StuntBonusV
 
         static internal bool IsQualifiedForInsaneStunt(this Vehicle vehicle)
         {
-            if (vehicle.ExistsSafe())
+            if (vehicle.SafeExists())
             {
                 var vehModel = vehicle.Model;
                 return !(vehModel.IsHelicopter || vehModel.IsPlane || vehModel.IsTrain || vehicle.IsSubmarine());

@@ -21,7 +21,7 @@ namespace StuntBonusV
 
         public InsaneStuntBonusResult(Vehicle vehicle, float distanceXY, float stuntHeight, uint flipCount, float totalHeadingRotation, uint gameTime)
         {
-            if (!vehicle.ExistsSafe())
+            if (!vehicle.SafeExists())
             {
                 throw new ArgumentNullException("vehicle");
             }
