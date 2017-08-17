@@ -124,7 +124,7 @@ namespace StuntBonusV
             var enc = Encoding.UTF8;
 
             var utf8ByteCount = enc.GetByteCount(input);
-            if (utf8ByteCount <= maxByteLengthPerString)
+            if (utf8ByteCount < maxByteLengthPerString)
             {
                 return new string[] { input };
             }
@@ -138,13 +138,14 @@ namespace StuntBonusV
             var stringList = new List<string>(initListCapacity);
             var startIndex = 0;
 
-            for (int i = 0; i <= input.Length; i++)
+            for (int i = 0; i < input.Length; i++)
             {
                 var length = i - startIndex;
                 if (enc.GetByteCount(input.Substring(startIndex, length)) > maxByteLengthPerString)
                 {
                     stringList.Add(input.Substring(startIndex, length - 1));
-                    startIndex = i - 1;
+                    i -= 1;
+                    startIndex = (startIndex + length - 1);
                 }
             }
             stringList.Add(input.Substring(startIndex, input.Length - startIndex));
