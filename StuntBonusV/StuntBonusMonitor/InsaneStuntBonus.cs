@@ -18,7 +18,7 @@ namespace StuntBonusV
 
             class InsaneStuntBonusSetting : Setting
             {
-                public bool EnablePerfectLandingDetection { get; set; } = true;
+                public bool IsPerfectLandingDetectionEnabled { get; set; } = true;
                 public bool UseNotificationsToShowResult { get; set; } = false;
                 public override bool Validate()
                 {
@@ -42,7 +42,7 @@ namespace StuntBonusV
             Vector3 _currentVehiclePos = Vector3.Zero;
             Vector3 _initVehiclePos = Vector3.Zero;
 
-            bool EnablePerfectLandingDetection => _setting.EnablePerfectLandingDetection;
+            bool IsPerfectLandingDetectionEnabled => _setting.IsPerfectLandingDetectionEnabled;
             bool UseNotificationsToShowResult => _setting.UseNotificationsToShowResult;
 
             List<InsaneStuntBonusResult> StuntResults = new List<InsaneStuntBonusResult>();
@@ -69,7 +69,7 @@ namespace StuntBonusV
                     return;
                 }
 
-                if (EnablePerfectLandingDetection)
+                if (IsPerfectLandingDetectionEnabled)
                 {
                     ProcessStuntResult(StuntResults);
                 }
@@ -140,7 +140,7 @@ namespace StuntBonusV
 
                     if (stuntBonusMult > 0)
                     {
-                        if (EnablePerfectLandingDetection)
+                        if (IsPerfectLandingDetectionEnabled)
                         {
                             StuntResults.Add(new InsaneStuntBonusResult(_currentVehicle, distance2d, stuntHeight, _flipCount, _totalHeadingRotation, (uint)Game.GameTime));
                         }
