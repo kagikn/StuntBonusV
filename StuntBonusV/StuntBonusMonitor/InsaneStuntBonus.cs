@@ -146,9 +146,9 @@ namespace StuntBonusV
                         }
                         else
                         {
-                            var bonusMoney = CalculateBonusMoney(distance2d, stuntHeight, _flipCount, _totalHeadingRotation, stuntBonusMult);
+                            var bonusMoney = CalculateBonusMoney(distance2d, stuntHeight, _flipCount, _totalHeadingRotation, stuntBonusMult, false);
                             Game.Player.Money += (int)bonusMoney;
-                            ShowInsaneStuntResult(distance2d, stuntHeight, _flipCount, _totalHeadingRotation, bonusMoney, stuntBonusMult);
+                            ShowInsaneStuntResult(distance2d, stuntHeight, _flipCount, _totalHeadingRotation, bonusMoney, stuntBonusMult, false);
                         }
                     }
                 }
@@ -174,9 +174,20 @@ namespace StuntBonusV
 
                         if (stuntBonusMult > 0)
                         {
-                            var bonusMoney = CalculateBonusMoney(distance2d, stuntHeight, flipCount, totalHeadingRotation, stuntBonusMult);
+                            var veh = results[i].Vehicle;
+                            var bodyHealthDiff = results[i].VehicleBodyHealth - veh.BodyHealth;
+                            var EngineHealthDiff = results[i].VehicleEngineHealth - veh.EngineHealth;
+                            var FuelTankHealthDiff = results[i].VehicleFuelTankHealth - veh.PetrolTankHealth;
+
+                            const float PERFECT_LANDING_THRESHOLD = 35f;
+                            bool perfectLanding = ( player.IsInVehicle(veh)
+                                                    && bodyHealthDiff < PERFECT_LANDING_THRESHOLD
+                                                    && EngineHealthDiff < PERFECT_LANDING_THRESHOLD
+                                                    && FuelTankHealthDiff < PERFECT_LANDING_THRESHOLD);
+
+                            var bonusMoney = CalculateBonusMoney(distance2d, stuntHeight, flipCount, totalHeadingRotation, stuntBonusMult, perfectLanding);
                             Game.Player.Money += (int)bonusMoney;
-                            ShowInsaneStuntResult(distance2d, stuntHeight, flipCount, totalHeadingRotation, bonusMoney, stuntBonusMult);
+                            ShowInsaneStuntResult(distance2d, stuntHeight, flipCount, totalHeadingRotation, bonusMoney, stuntBonusMult, perfectLanding);
                         }
                     }
 
@@ -184,16 +195,17 @@ namespace StuntBonusV
                 }
             }
 
-            private uint CalculateBonusMoney(float distance2d, float stuntHeight, uint stuntFlipCount, float totalHeadingRotation, uint bonusMultiplier)
+            private uint CalculateBonusMoney(float distance2d, float stuntHeight, uint stuntFlipCount, float totalHeadingRotation, uint bonusMultiplier, bool perfectLanding)
             {
                 var bonusMoney = (stuntFlipCount * 180) + ((uint)totalHeadingRotation) + ((uint)distance2d * 6) + ((uint)stuntHeight * 45);
                 bonusMoney *= bonusMultiplier;
+                bonusMoney = (perfectLanding ? bonusMultiplier * 2 : bonusMultiplier);
                 bonusMoney /= 15;
 
                 return bonusMoney;
             }
 
-            private void ShowInsaneStuntResult(float distance2d, float stuntHeight, uint stuntFlipCount, float totalHeadingRotation, uint bonusMoney, uint bonusMultiplier)
+            private void ShowInsaneStuntResult(float distance2d, float stuntHeight, uint stuntFlipCount, float totalHeadingRotation, uint bonusMoney, uint bonusMultiplier, bool perfectLanding)
             {
                 var tupleStr = String.Empty;
 
@@ -239,13 +251,17 @@ namespace StuntBonusV
                 var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                 if (Game.Language == Language.Japanese)
                 {
-                    ShowResult(String.Format("{0}クレイジースタントボーナス！ {1}ドル", tupleStr, bonusMoney), resultStyle, 2000);
-                    ShowResult(String.Format("距離: {0}m 高さ: {1}m 縦回転: {2} 横回転: {3}度", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation), resultStyle, 5000);
+                    var perfectLandingStr1 = perfectLanding ? "パーフェクト・" : string.Empty;
+                    var perfectLandingStr2 = perfectLanding ? " おまけに完璧な着地だ！" : string.Empty;
+                    ShowResult(String.Format("{0}{2}クレイジースタントボーナス！ {1}ドル", tupleStr, bonusMoney, perfectLandingStr1), resultStyle, 2000);
+                    ShowResult(String.Format("距離: {0}m 高さ: {1}m 縦回転: {2} 横回転: {3}度{4}", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation, perfectLandingStr2), resultStyle, 5000);
                 }
                 else
                 {
-                    ShowResult(String.Format("{0}INSANE STUNT BONUS: ${1}", tupleStr, bonusMoney), resultStyle, 2000);
-                    ShowResult(String.Format("Distance: {0}m Height: {1}m Flips: {2} Rotation: {3}°", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation), resultStyle, 5000);
+                    var perfectLandingStr1 = perfectLanding ? "PERFECT " : string.Empty;
+                    var perfectLandingStr2 = perfectLanding ? " And what a great landing!" : string.Empty;
+                    ShowResult(String.Format("{0}INSANE STUNT BONUS: ${1}", tupleStr, bonusMoney, perfectLandingStr1), resultStyle, 2000);
+                    ShowResult(String.Format("Distance: {0}m Height: {1}m Flips: {2} Rotation: {3}°{4}", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation, perfectLandingStr2), resultStyle, 5000);
                 }
             }
 
