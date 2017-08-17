@@ -27,7 +27,7 @@ namespace StuntBonusV
                 return;
             }
 
-            Function.Call(Hash._SET_TEXT_ENTRY_2, "CELL_EMAIL_BCON");
+            Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, "CELL_EMAIL_BCON");
             const int maxBytes = 99;
 
             foreach (var str in Util.ToSlicedStrings(message, maxBytes))
