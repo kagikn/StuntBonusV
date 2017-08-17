@@ -36,7 +36,7 @@ namespace StuntBonusV
             var loader = new SettingLoader<T>();
             var setting = loader.Load(settingFilePath);
 
-            return setting.Validate() ? setting : new T();
+            return setting;
         }
         protected void SaveSetting<T>(T value) where T : Setting, new()
         {
@@ -48,8 +48,6 @@ namespace StuntBonusV
             var settingFilePath = Util.SettingRootPath + Path.DirectorySeparatorChar + SettingFileName;
             var loader = new SettingLoader<T>();
             loader.Save(settingFilePath, value);
-
-            //return setting.Validate() ? setting : new T();
         }
     }
 }
