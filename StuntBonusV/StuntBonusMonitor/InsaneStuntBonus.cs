@@ -44,7 +44,7 @@ namespace StuntBonusV
                 Tick += OnTick;
             }
 
-            internal static void OnTick(object o, EventArgs e)
+            internal void OnTick(object o, EventArgs e)
             {
 
                 var player = Game.Player.Character;
