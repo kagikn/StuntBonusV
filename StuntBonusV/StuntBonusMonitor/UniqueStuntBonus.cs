@@ -35,7 +35,7 @@ namespace StuntBonusV
 
             #endregion
 
-            static int _completedUniqueStuntCount = GtaNativeUtil.GetCompletedUniqueStuntCount();
+            int _completedUniqueStuntCount = GtaNativeUtil.GetCompletedUniqueStuntCount();
 
             protected override void Setup()
             {

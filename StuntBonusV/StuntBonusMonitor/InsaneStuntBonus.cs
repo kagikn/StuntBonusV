@@ -29,15 +29,15 @@ namespace StuntBonusV
 
             #endregion
 
-            static float _stuntTotalRotation = 0;
-            static float _prevVehicleHeading = 0;
-            static uint _stuntFlipCount = 0;
-            static bool _wasFlippedInPrevFrame = true;
-            static bool _isStunting = false;
-            static float _maxVehicleZPos = float.MinValue;
-            static Vehicle _currentVehicle = null;
-            static Vector3 _currentVehiclePos = Vector3.Zero;
-            static Vector3 _initVehiclePos = Vector3.Zero;
+            float _stuntTotalRotation = 0;
+            float _prevVehicleHeading = 0;
+            uint _stuntFlipCount = 0;
+            bool _wasFlippedInPrevFrame = true;
+            bool _isStunting = false;
+            float _maxVehicleZPos = float.MinValue;
+            Vehicle _currentVehicle = null;
+            Vector3 _currentVehiclePos = Vector3.Zero;
+            Vector3 _initVehiclePos = Vector3.Zero;
 
             protected override void Setup()
             {
@@ -183,7 +183,7 @@ namespace StuntBonusV
 
 
 
-            static private uint GetStuntBonusMult(float stuntHeight, float distance2d, uint stuntFlipCount, float stuntRotation)
+            private uint GetStuntBonusMult(float stuntHeight, float distance2d, uint stuntFlipCount, float stuntRotation)
             {
                 uint stuntBonusMult = 0;
 
@@ -210,7 +210,7 @@ namespace StuntBonusV
                 return stuntBonusMult;
             }
 
-            static private void InitInsaneStuntVars(Vehicle veh)
+            private void InitInsaneStuntVars(Vehicle veh)
             {
                 if (!veh.ExistsSafe())
                 {

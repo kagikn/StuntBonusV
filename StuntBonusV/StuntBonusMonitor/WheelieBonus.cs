@@ -29,11 +29,11 @@ namespace StuntBonusV
 
             #endregion
 
-            static Vehicle _currentVehicle;
-            static Vector3 _prevVehiclePos;
-            static uint _startTimeOfWheelie;
-            static bool _isPerformingWheelie;
-            static float _TotalWheelieDistance;
+            Vehicle _currentVehicle;
+            Vector3 _prevVehiclePos;
+            uint _startTimeOfWheelie;
+            bool _isPerformingWheelie;
+            float _TotalWheelieDistance;
             const int MIN_TIME_TO_EARN_MONEY = 5000;
 
             protected override void Setup()

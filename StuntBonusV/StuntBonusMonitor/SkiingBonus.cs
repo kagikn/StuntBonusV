@@ -28,11 +28,11 @@ namespace StuntBonusV
 
             #endregion
 
-            static Vehicle _currentVehicle;
-            static Vector3 _prevVehiclePos;
-            static uint _startTimeOfSkiing;
-            static bool _isPerformingSkiing;
-            static float _TotalSkiingDistance;
+            Vehicle _currentVehicle;
+            Vector3 _prevVehiclePos;
+            uint _startTimeOfSkiing;
+            bool _isPerformingSkiing;
+            float _TotalSkiingDistance;
             const int MIN_TIME_TO_EARN_MONEY = 2000;
 
             protected override void Setup()
