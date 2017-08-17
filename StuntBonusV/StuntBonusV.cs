@@ -44,6 +44,10 @@ namespace StuntBonusV
             {
                 throw new InvalidOperationException("The Internal setting path string is empty!");
             }
+            if (!Directory.Exists(Util.SettingRootPath))
+            {
+                Directory.CreateDirectory(Util.SettingRootPath);
+            }            
 
             var settingFilePath = Util.SettingRootPath + Path.DirectorySeparatorChar + SettingFileName;
             var loader = new SettingLoader<T>();

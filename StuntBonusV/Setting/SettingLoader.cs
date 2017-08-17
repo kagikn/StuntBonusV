@@ -28,13 +28,10 @@ namespace StuntBonusV
         {
             var serializer = new XmlSerializer(typeof(T));
 
-            if (File.Exists(xmlPath))
+            using (var stream = new FileStream(xmlPath, File.Exists(xmlPath) ? FileMode.Truncate : FileMode.Create, FileAccess.ReadWrite))
             {
-                using (var stream = new FileStream(xmlPath, File.Exists(xmlPath) ? FileMode.Truncate : FileMode.Create, FileAccess.ReadWrite))
-                {
-                    serializer.Serialize(stream, settings);
-                    return true;
-                }
+                serializer.Serialize(stream, settings);
+                return true;
             }
 
             return false;
