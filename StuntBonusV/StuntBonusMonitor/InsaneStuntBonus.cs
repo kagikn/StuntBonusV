@@ -156,10 +156,10 @@ namespace StuntBonusV
 
             private void ProcessStuntResult(List<InsaneStuntBonusResult> results)
             {
-                results.RemoveAll(x => !x.Vehicle.ExistsSafe() && x.Vehicle.IsDead);
+                results.RemoveAll(x => !x.Vehicle.ExistsSafe() || x.Vehicle.IsDead);
 
                 var player = Game.Player.Character;
-                var gameTimeNow = Game.GameTime;
+                var gameTimeNow = (uint)Game.GameTime;
 
                 for (int i = results.Count - 1; i >= 0; i--)
                 {
@@ -179,19 +179,18 @@ namespace StuntBonusV
                             var EngineHealthDiff = results[i].VehicleEngineHealth - veh.EngineHealth;
                             var FuelTankHealthDiff = results[i].VehicleFuelTankHealth - veh.PetrolTankHealth;
 
-                            const float PERFECT_LANDING_THRESHOLD = 35f;
+                            const float PERFECT_LANDING_HEALTH_THRESHOLD = 35f;
                             bool perfectLanding = ( player.IsInVehicle(veh)
-                                                    && bodyHealthDiff < PERFECT_LANDING_THRESHOLD
-                                                    && EngineHealthDiff < PERFECT_LANDING_THRESHOLD
-                                                    && FuelTankHealthDiff < PERFECT_LANDING_THRESHOLD);
+                                                    && bodyHealthDiff < PERFECT_LANDING_HEALTH_THRESHOLD
+                                                    && EngineHealthDiff < PERFECT_LANDING_HEALTH_THRESHOLD
+                                                    && FuelTankHealthDiff < PERFECT_LANDING_HEALTH_THRESHOLD);
 
                             var bonusMoney = CalculateBonusMoney(distance2d, stuntHeight, flipCount, totalHeadingRotation, stuntBonusMult, perfectLanding);
                             Game.Player.Money += (int)bonusMoney;
                             ShowInsaneStuntResult(distance2d, stuntHeight, flipCount, totalHeadingRotation, bonusMoney, stuntBonusMult, perfectLanding);
                         }
+                        results.RemoveAt(i);
                     }
-
-                    results.RemoveAt(i);
                 }
             }
 
@@ -199,7 +198,10 @@ namespace StuntBonusV
             {
                 var bonusMoney = (stuntFlipCount * 180) + ((uint)totalHeadingRotation) + ((uint)distance2d * 6) + ((uint)stuntHeight * 45);
                 bonusMoney *= bonusMultiplier;
-                bonusMoney = (perfectLanding ? bonusMultiplier * 2 : bonusMultiplier);
+                if (perfectLanding)
+                {
+                    bonusMultiplier *= 2;
+                }
                 bonusMoney /= 15;
 
                 return bonusMoney;
@@ -260,7 +262,7 @@ namespace StuntBonusV
                 {
                     var perfectLandingStr1 = perfectLanding ? "PERFECT " : string.Empty;
                     var perfectLandingStr2 = perfectLanding ? " And what a great landing!" : string.Empty;
-                    ShowResult(String.Format("{0}INSANE STUNT BONUS: ${1}", tupleStr, bonusMoney, perfectLandingStr1), resultStyle, 2000);
+                    ShowResult(String.Format("{2}{0}INSANE STUNT BONUS: ${1}", tupleStr, bonusMoney, perfectLandingStr1), resultStyle, 2000);
                     ShowResult(String.Format("Distance: {0}m Height: {1}m Flips: {2} Rotation: {3}°{4}", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation, perfectLandingStr2), resultStyle, 5000);
                 }
             }
