@@ -1,4 +1,4 @@
-# StuntBonusV
+# Stunt Bonus V
 
 [![License](https://img.shields.io/github/license/kagikn/StuntBonusV.svg?style=flat-square)](./LICENSE.md)
 
