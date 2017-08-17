@@ -35,11 +35,20 @@ namespace StuntBonusV
 
             #endregion
 
+            private UniqueStuntSetting _setting;
+
             int _completedUniqueStuntCount = GtaNativeUtil.GetCompletedUniqueStuntCount();
 
             protected override void Setup()
             {
                 Tick += OnTick;
+
+                var _setting = LoadSetting<UniqueStuntSetting>();
+                if (_setting == null || !_setting.Validate())
+                {
+                    _setting = new UniqueStuntSetting();
+                    SaveSetting(_setting);
+                }
             }
 
             internal void OnTick(object o, EventArgs e)

@@ -29,6 +29,8 @@ namespace StuntBonusV
 
             #endregion
 
+            private WheelieBonusSetting _setting;
+
             Vehicle _currentVehicle;
             Vector3 _prevVehiclePos;
             uint _startTimeOfWheelie;
@@ -39,6 +41,13 @@ namespace StuntBonusV
             protected override void Setup()
             {
                 Tick += OnTick;
+
+                var _setting = LoadSetting<WheelieBonusSetting>();
+                if (_setting == null || !_setting.Validate())
+                {
+                    _setting = new WheelieBonusSetting();
+                    SaveSetting(_setting);
+                }
             }
 
             internal void OnTick(object o, EventArgs e)

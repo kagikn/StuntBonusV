@@ -28,6 +28,8 @@ namespace StuntBonusV
 
             #endregion
 
+            private SkiingBonusSetting _setting;
+
             Vehicle _currentVehicle;
             Vector3 _prevVehiclePos;
             uint _startTimeOfSkiing;
@@ -38,6 +40,13 @@ namespace StuntBonusV
             protected override void Setup()
             {
                 Tick += OnTick;
+
+                var _setting = LoadSetting<SkiingBonusSetting>();
+                if (_setting == null || !_setting.Validate())
+                {
+                    _setting = new SkiingBonusSetting();
+                    SaveSetting(_setting);
+                }
             }
 
             internal void OnTick(object o, EventArgs e)

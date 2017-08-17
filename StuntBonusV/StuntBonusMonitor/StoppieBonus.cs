@@ -28,6 +28,8 @@ namespace StuntBonusV
 
             #endregion
 
+            private StoppieBonusSetting _setting;
+
             Vehicle _currentVehicle;
             Vector3 _prevVehiclePos;
             uint _startTimeOfStoppie;
@@ -38,6 +40,13 @@ namespace StuntBonusV
             protected override void Setup()
             {
                 Tick += OnTick;
+
+                var _setting = LoadSetting<StoppieBonusSetting>();
+                if (_setting == null || !_setting.Validate())
+                {
+                    _setting = new StoppieBonusSetting();
+                    SaveSetting(_setting);
+                }
             }
 
             internal void OnTick(object o, EventArgs e)

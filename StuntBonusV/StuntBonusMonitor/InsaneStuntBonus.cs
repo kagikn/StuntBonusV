@@ -29,6 +29,8 @@ namespace StuntBonusV
 
             #endregion
 
+            private InsaneStuntBonusSetting _setting;
+
             float _stuntTotalRotation = 0;
             float _prevVehicleHeading = 0;
             uint _stuntFlipCount = 0;
@@ -42,6 +44,13 @@ namespace StuntBonusV
             protected override void Setup()
             {
                 Tick += OnTick;
+
+                var _setting = LoadSetting<InsaneStuntBonusSetting>();
+                if (_setting == null || !_setting.Validate())
+                {
+                    _setting = new InsaneStuntBonusSetting();
+                    SaveSetting(_setting);
+                }
             }
 
             internal void OnTick(object o, EventArgs e)
