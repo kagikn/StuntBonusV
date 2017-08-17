@@ -98,7 +98,7 @@ namespace StuntBonusV
                             bonusMoney *= 2;
                             bonusMoney /= 5;
                             bonusMoney /= 2;
-                            player.Money += bonusMoney;
+                            Game.Player.Money += bonusMoney;
 
                             var timeSecs = wheelieTime / 1000;
                             var timeMillisecs = wheelieTime - timeSecs * 1000;

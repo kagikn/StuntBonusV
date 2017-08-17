@@ -94,7 +94,7 @@ namespace StuntBonusV
                         if (stoppieTime >= MIN_TIME_TO_EARN_MONEY)
                         {
                             var bonusMoney = ((int)_TotalStoppieDistance) / 2;
-                            player.Money += bonusMoney;
+                            Game.Player.Money += bonusMoney;
 
                             var timeSecs = stoppieTime / 1000;
                             var timeMillisecs = stoppieTime - timeSecs * 1000;

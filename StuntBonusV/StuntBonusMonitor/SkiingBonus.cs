@@ -94,7 +94,7 @@ namespace StuntBonusV
                         if (skiingTime >= MIN_TIME_TO_EARN_MONEY)
                         {
                             var bonusMoney = (((int)skiingTime / 1000) + (int)_TotalSkiingDistance) / 2;
-                            player.Money += bonusMoney;
+                            Game.Player.Money += bonusMoney;
 
                             var timeSecs = skiingTime / 1000;
                             var timeMillisecs = skiingTime - timeSecs * 1000;
