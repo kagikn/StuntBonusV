@@ -16,6 +16,29 @@ namespace StuntBonusV
         const int USJS_COMPLETED_HASH = unchecked((int)0x861ADACB);
 
         /// <summary>
+        /// Creates a notification above the minimap with the given message.
+        /// </summary>
+        /// <param name="message">The message in the notification.</param>
+        /// <param name="blinking">if set to <c>true</c> the notification will blink.</param>
+        public static void ShowNotification(string message, bool blinking = false)
+        {
+            if (string.IsNullOrEmpty(message))
+            {
+                return;
+            }
+
+            Function.Call(Hash._SET_TEXT_ENTRY_2, "CELL_EMAIL_BCON");
+            const int maxBytes = 99;
+
+            foreach (var str in Util.ToSlicedStrings(message, maxBytes))
+            {
+                Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, str);
+            }
+
+            Function.Call(Hash._DRAW_NOTIFICATION, blinking, true);
+        }
+
+        /// <summary>
         /// Shows a subtitle at the bottom of the screen for a given time
         /// </summary>
         /// <param name="message">The message to display.</param>
@@ -67,7 +90,6 @@ namespace StuntBonusV
             {
                 return ToSlicedForMultibyteStr(input, maxByteLengthPerString);
             }
-
         }
 
         private static string[] ToSlicedForAscii(string input, int maxByteLengthPerString = 99)

@@ -49,5 +49,25 @@ namespace StuntBonusV
             var loader = new SettingLoader<T>();
             loader.Save(settingFilePath, value);
         }
+
+        protected enum ShowingResultStyle { Subtitle, Notification };
+
+        protected void ShowResult(string message, ShowingResultStyle resultStyle, int durationForSubtitle = 3000)
+        {
+            switch(resultStyle)
+            {
+                case ShowingResultStyle.Subtitle:
+                    GtaNativeUtil.ShowSubtitle(message, durationForSubtitle, false);
+                    break;
+                case ShowingResultStyle.Notification:
+                    GtaNativeUtil.ShowNotification(message);
+                    break;
+            }
+        }
+
+        protected void ShowResult(string message, int durationForSubtitle)
+        {
+            GtaNativeUtil.ShowSubtitle(message, durationForSubtitle, false);
+        }
     }
 }
