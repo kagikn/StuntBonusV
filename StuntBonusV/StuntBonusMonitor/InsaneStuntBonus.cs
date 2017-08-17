@@ -254,7 +254,7 @@ namespace StuntBonusV
                 var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                 if (Game.Language == Language.Japanese)
                 {
-                    var perfectLandingStr1 = perfectLanding ? "パーフェクト・" : string.Empty;
+                    var perfectLandingStr1 = perfectLanding ? "パーフェクト" : string.Empty;
                     var perfectLandingStr2 = perfectLanding ? "~n~おまけに完璧な着地だ！" : string.Empty;
                     ShowResult(String.Format("{0}{2}クレイジースタントボーナス！ {1}ドル", tupleStr, bonusMoney, perfectLandingStr1), resultStyle, 2000);
                     ShowResult(String.Format("距離: {0}m 高さ: {1}m 縦回転: {2} 横回転: {3}度{4}", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation, perfectLandingStr2), resultStyle, 5000);
