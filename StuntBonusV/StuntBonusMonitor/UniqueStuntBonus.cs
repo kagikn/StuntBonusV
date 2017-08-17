@@ -62,7 +62,17 @@ namespace StuntBonusV
                 var currentCompletedStuntJumpCount = GtaNativeUtil.GetCompletedUniqueStuntCount();
                 if (_completedUniqueStuntCount < currentCompletedStuntJumpCount)
                 {
-                    Game.Player.Money += 500;
+                    var bonusMoney = BaseAward;
+                    if (IsLastSpecialAwardEnabled && _completedUniqueStuntCount == 50)
+                    {
+                        bonusMoney = LastStuntAward;
+                    }
+                    else if (IsBonusXEnabled)
+                    {
+                        bonusMoney *= currentCompletedStuntJumpCount;
+                    }
+
+                    Game.Player.Money += bonusMoney;
                     _completedUniqueStuntCount = currentCompletedStuntJumpCount;
                 }
             }
