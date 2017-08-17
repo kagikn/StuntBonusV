@@ -102,7 +102,7 @@ namespace StuntBonusV
                             var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                             if (Game.Language == Language.Japanese)
                             {
-                                ShowResult(String.Format("片輪走行ボーナス！ {0}ドル 距離:{1}m 時間:{2}.{3}秒", bonusMoney, _TotalSkiingDistance, timeSecs, timeMillisecs), resultStyle, 3000);
+                                ShowResult(String.Format("片輪走行ボーナス {0}ドル 距離:{1}m 時間:{2}.{3}秒", bonusMoney, _TotalSkiingDistance, timeSecs, timeMillisecs), resultStyle, 3000);
                             }
                             else
                             {

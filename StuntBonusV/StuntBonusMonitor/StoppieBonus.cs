@@ -102,7 +102,7 @@ namespace StuntBonusV
                             var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                             if (Game.Language == Language.Japanese)
                             {
-                                ShowResult(String.Format("ジャックナイフボーナス！ {0}ドル 距離:{1}m 時間:{2}.{3}秒", bonusMoney, _TotalStoppieDistance, timeSecs, timeMillisecs), resultStyle, 3000);
+                                ShowResult(String.Format("ジャックナイフボーナス {0}ドル 距離:{1}m 時間:{2}.{3}秒", bonusMoney, _TotalStoppieDistance, timeSecs, timeMillisecs), resultStyle, 3000);
                             }
 
                             else
