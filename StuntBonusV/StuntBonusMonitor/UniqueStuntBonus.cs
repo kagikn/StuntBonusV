@@ -34,9 +34,16 @@ namespace StuntBonusV
 
             #endregion
 
+            #region fields
             private UniqueStuntSetting _setting;
 
-            int _completedUniqueStuntCount = GtaNativeUtil.GetCompletedUniqueStuntCount();
+            private int _completedUniqueStuntCount = GtaNativeUtil.GetCompletedUniqueStuntCount();
+
+            private int BaseAward => _setting.BaseAward;
+            private bool EnableBonusX => _setting.EnableBonusX;
+            private bool EnableLastSpecialAward => _setting.EnableLastSpecialAward;
+            private int LastAward => _setting.LastAward;
+            #endregion fields
 
             protected override void Setup()
             {

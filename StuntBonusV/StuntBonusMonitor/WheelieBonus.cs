@@ -29,6 +29,7 @@ namespace StuntBonusV
 
             #endregion
 
+            #region fields
             private WheelieBonusSetting _setting;
 
             Vehicle _currentVehicle;
@@ -37,6 +38,9 @@ namespace StuntBonusV
             bool _isPerformingWheelie;
             float _TotalWheelieDistance;
             const int MIN_TIME_TO_EARN_MONEY = 5000;
+
+            bool UseNotificationsToShowResult => _setting.UseNotificationsToShowResult;
+            #endregion fields
 
             protected override void Setup()
             {
@@ -98,13 +102,15 @@ namespace StuntBonusV
 
                             var timeSecs = wheelieTime / 1000;
                             var timeMillisecs = wheelieTime - timeSecs * 1000;
+
+                            var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                             if (Game.Language == Language.Japanese)
                             {
-                                GtaNativeUtil.ShowSubtitle(String.Format("ウィリーボーナス！ {0}ドル 距離:{1}m 時間:{2}.{3}秒", bonusMoney, _TotalWheelieDistance, timeSecs, timeMillisecs), 3000, false);
+                                ShowResult(String.Format("ウィリーボーナス！ {0}ドル 距離:{1}m 時間:{2}.{3}秒", bonusMoney, _TotalWheelieDistance, timeSecs, timeMillisecs), resultStyle, 3000);
                             }
                             else
                             {
-                                GtaNativeUtil.ShowSubtitle(String.Format("WHEELIE BONUS: ${0} Distance: {1}m Time: {2}.{3} seconds", bonusMoney, _TotalWheelieDistance, timeSecs, timeMillisecs), 3000, false);
+                                ShowResult(String.Format("WHEELIE BONUS: ${0} Distance: {1}m Time: {2}.{3} seconds", bonusMoney, _TotalWheelieDistance, timeSecs, timeMillisecs), resultStyle, 3000);
                             }
                         }
                     }

@@ -71,12 +71,12 @@
     <Compile Include="Setting\Setting.cs" />
     <Compile Include="Setting\SettingLoader.cs" />
     <Compile Include="StuntBonusMonitor\InsaneStuntBonus.cs" />
+    <Compile Include="InsaneStuntBonusResult.cs" />
     <Compile Include="StuntBonusMonitor\SkiingBonus.cs" />
     <Compile Include="StuntBonusV.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StuntBonusMonitor\StoppieBonus.cs" />
     <Compile Include="StuntBonusMonitor\UniqueStuntBonus.cs" />
-    <Compile Include="Translation.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="StuntBonusMonitor\WheelieBonus.cs" />
   </ItemGroup>

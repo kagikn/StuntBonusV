@@ -28,6 +28,7 @@ namespace StuntBonusV
 
             #endregion
 
+            #region fields
             private SkiingBonusSetting _setting;
 
             Vehicle _currentVehicle;
@@ -36,6 +37,9 @@ namespace StuntBonusV
             bool _isPerformingSkiing;
             float _TotalSkiingDistance;
             const int MIN_TIME_TO_EARN_MONEY = 2000;
+
+            bool UseNotificationsToShowResult => _setting.UseNotificationsToShowResult;
+            #endregion fields
 
             protected override void Setup()
             {
@@ -94,13 +98,15 @@ namespace StuntBonusV
 
                             var timeSecs = skiingTime / 1000;
                             var timeMillisecs = skiingTime - timeSecs * 1000;
+
+                            var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                             if (Game.Language == Language.Japanese)
                             {
-                                GtaNativeUtil.ShowSubtitle(String.Format("片輪走行ボーナス！ {0}ドル 距離:{1}m 時間:{2}.{3}秒", bonusMoney, _TotalSkiingDistance, timeSecs, timeMillisecs), 3000, false);
+                                ShowResult(String.Format("片輪走行ボーナス！ {0}ドル 距離:{1}m 時間:{2}.{3}秒", bonusMoney, _TotalSkiingDistance, timeSecs, timeMillisecs), resultStyle, 3000);
                             }
                             else
                             {
-                                GtaNativeUtil.ShowSubtitle(String.Format("SKIING BONUS: ${0} Distance: {1}m Time: {2}.{3} seconds", bonusMoney, _TotalSkiingDistance, timeSecs, timeMillisecs), 3000, false);
+                                ShowResult(String.Format("SKIING BONUS: ${0} Distance: {1}m Time: {2}.{3} seconds", bonusMoney, _TotalSkiingDistance, timeSecs, timeMillisecs), resultStyle, 3000);
                             }
                         }
                     }

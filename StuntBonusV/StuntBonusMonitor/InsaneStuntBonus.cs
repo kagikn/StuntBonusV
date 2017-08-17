@@ -32,15 +32,15 @@ namespace StuntBonusV
             #region fields
             private InsaneStuntBonusSetting _setting;
 
-            float _totalHeadingRotation = 0;
-            float _prevVehicleHeading = 0;
-            uint _flipCount = 0;
-            bool _wasFlippedInPrevFrame = true;
-            bool _isStunting = false;
-            float _maxVehicleZPos = float.MinValue;
-            Vehicle _currentVehicle = null;
-            Vector3 _currentVehiclePos = Vector3.Zero;
-            Vector3 _initVehiclePos = Vector3.Zero;
+            private float _totalHeadingRotation = 0;
+            private float _prevVehicleHeading = 0;
+            private uint _flipCount = 0;
+            private bool _wasFlippedInPrevFrame = true;
+            private bool _isStunting = false;
+            private float _maxVehicleZPos = float.MinValue;
+            private Vehicle _currentVehicle = null;
+            private Vector3 _currentVehiclePos = Vector3.Zero;
+            private Vector3 _initVehiclePos = Vector3.Zero;
 
             bool IsPerfectLandingDetectionEnabled => _setting.IsPerfectLandingDetectionEnabled;
             bool UseNotificationsToShowResult => _setting.UseNotificationsToShowResult;
@@ -236,15 +236,14 @@ namespace StuntBonusV
                     }
                 }
 
+                var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                 if (Game.Language == Language.Japanese)
                 {
-                    var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                     ShowResult(String.Format("{0}クレイジースタントボーナス！ {1}ドル", tupleStr, bonusMoney), resultStyle, 2000);
                     ShowResult(String.Format("距離: {0}m 高さ: {1}m 縦回転: {2} 横回転: {3}度", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation), resultStyle, 5000);
                 }
                 else
                 {
-                    var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                     ShowResult(String.Format("{0}INSANE STUNT BONUS: ${1}", tupleStr, bonusMoney), resultStyle, 2000);
                     ShowResult(String.Format("Distance: {0}m Height: {1}m Flips: {2} Rotation: {3}°", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation), resultStyle, 5000);
                 }

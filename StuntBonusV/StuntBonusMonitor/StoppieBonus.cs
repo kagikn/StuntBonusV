@@ -28,6 +28,7 @@ namespace StuntBonusV
 
             #endregion
 
+            #region fields
             private StoppieBonusSetting _setting;
 
             Vehicle _currentVehicle;
@@ -36,6 +37,9 @@ namespace StuntBonusV
             bool _isPerformingStoppie;
             float _TotalStoppieDistance;
             const int MIN_TIME_TO_EARN_MONEY = 2000;
+
+            bool UseNotificationsToShowResult => _setting.UseNotificationsToShowResult;
+            #endregion fields
 
             protected override void Setup()
             {
@@ -94,13 +98,16 @@ namespace StuntBonusV
 
                             var timeSecs = stoppieTime / 1000;
                             var timeMillisecs = stoppieTime - timeSecs * 1000;
+
+                            var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                             if (Game.Language == Language.Japanese)
                             {
-                                GtaNativeUtil.ShowSubtitle(String.Format("ジャックナイフボーナス！ {0}ドル 距離:{1}m 時間:{2}.{3}秒", bonusMoney, _TotalStoppieDistance, timeSecs, timeMillisecs), 3000, false);
+                                ShowResult(String.Format("ジャックナイフボーナス！ {0}ドル 距離:{1}m 時間:{2}.{3}秒", bonusMoney, _TotalStoppieDistance, timeSecs, timeMillisecs), resultStyle, 3000);
                             }
+
                             else
                             {
-                                GtaNativeUtil.ShowSubtitle(String.Format("STOPPIE BONUS: ${0} Distance: {1}m Time: {2}.{3} seconds", bonusMoney, _TotalStoppieDistance, timeSecs, timeMillisecs), 3000, false);
+                                ShowResult(String.Format("STOPPIE BONUS: ${0} Distance: {1}m Time: {2}.{3} seconds", bonusMoney, _TotalStoppieDistance, timeSecs, timeMillisecs), resultStyle, 3000);
                             }
                         }
                     }
