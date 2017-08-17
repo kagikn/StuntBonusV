@@ -9,16 +9,17 @@ namespace StuntBonusV
 {
     internal class InsaneStuntBonusResult
     {
-        private Vehicle Vehicle { get; }
-        private float DistanceXY { get; }
-        private float StuntHeight { get; }
-        private int FlipCount { get; }
-        private float TotalHeadingRotation { get; }
-        private float VehicleBodyHealth { get; }
-        private float VehicleEngineHealth { get; }
-        private float VehicleFuelTankHealth { get; }
+        public Vehicle Vehicle { get; }
+        public float DistanceXY { get; }
+        public float StuntHeight { get; }
+        public uint FlipCount { get; }
+        public float TotalHeadingRotation { get; }
+        public float VehicleBodyHealth { get; }
+        public float VehicleEngineHealth { get; }
+        public float VehicleFuelTankHealth { get; }
+        public uint GameTimeOnFinish { get; }
 
-        public InsaneStuntBonusResult(Vehicle vehicle, float distanceXY, float stuntHeight, int flipCount, int totalHeadingRotation)
+        public InsaneStuntBonusResult(Vehicle vehicle, float distanceXY, float stuntHeight, uint flipCount, float totalHeadingRotation, uint gameTime)
         {
             if (!vehicle.ExistsSafe())
             {
@@ -30,6 +31,7 @@ namespace StuntBonusV
             StuntHeight = stuntHeight;
             FlipCount = flipCount;
             TotalHeadingRotation = totalHeadingRotation;
+            GameTimeOnFinish = gameTime;
 
             VehicleBodyHealth = vehicle.BodyHealth;
             VehicleEngineHealth = vehicle.EngineHealth;

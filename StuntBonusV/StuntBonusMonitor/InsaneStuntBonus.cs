@@ -29,17 +29,24 @@ namespace StuntBonusV
 
             #endregion
 
+            #region fields
             private InsaneStuntBonusSetting _setting;
 
-            float _stuntTotalRotation = 0;
+            float _totalHeadingRotation = 0;
             float _prevVehicleHeading = 0;
-            uint _stuntFlipCount = 0;
+            uint _flipCount = 0;
             bool _wasFlippedInPrevFrame = true;
             bool _isStunting = false;
             float _maxVehicleZPos = float.MinValue;
             Vehicle _currentVehicle = null;
             Vector3 _currentVehiclePos = Vector3.Zero;
             Vector3 _initVehiclePos = Vector3.Zero;
+
+            bool EnablePerfectLandingDetection => _setting.EnablePerfectLandingDetection;
+            bool UseNotificationsToShowResult => _setting.UseNotificationsToShowResult;
+
+            List<InsaneStuntBonusResult> StuntResults = new List<InsaneStuntBonusResult>();
+            #endregion fields
 
             protected override void Setup()
             {
@@ -55,12 +62,16 @@ namespace StuntBonusV
 
             internal void OnTick(object o, EventArgs e)
             {
-
                 var player = Game.Player.Character;
                 if (!player.ExistsSafe())
                 {
                     _isStunting = false;
                     return;
+                }
+
+                if (EnablePerfectLandingDetection)
+                {
+                    ProcessStuntResult(StuntResults);
                 }
 
                 var playerVeh = player.CurrentVehicle;
@@ -93,7 +104,7 @@ namespace StuntBonusV
                     }
                     else if (_currentVehicle.IsUpsideDown && !_wasFlippedInPrevFrame)
                     {
-                        _stuntFlipCount += 1;
+                        _flipCount += 1;
                         _wasFlippedInPrevFrame = true;
                     }
 
@@ -108,7 +119,7 @@ namespace StuntBonusV
                             deltaHeading = 360f - deltaHeading;
                         }
 
-                        _stuntTotalRotation += deltaHeading;
+                        _totalHeadingRotation += deltaHeading;
                     }
                     if (_currentVehiclePos.Z > _maxVehicleZPos)
                     {
@@ -125,74 +136,121 @@ namespace StuntBonusV
 
                     var distance2d = Vector3.Distance2D(_initVehiclePos, endVehiclePos);
 
-                    var stuntBonusMult = GetStuntBonusMult(stuntHeight, distance2d, _stuntFlipCount, _stuntTotalRotation);
+                    var stuntBonusMult = GetStuntBonusMult(distance2d, stuntHeight, _flipCount, _totalHeadingRotation);
 
                     if (stuntBonusMult > 0)
                     {
-                        var bonusMoney = (_stuntFlipCount * 180) + ((uint)_stuntTotalRotation) + ((uint)distance2d * 6) + ((uint)stuntHeight * 45);
-                        bonusMoney *= stuntBonusMult;
-                        bonusMoney /= 15;
-
-                        Game.Player.Money += (int)bonusMoney;
-
-                        var tupleStr = String.Empty;
-
-                        if (Game.Language == Language.Japanese)
+                        if (EnablePerfectLandingDetection)
                         {
-                            switch (stuntBonusMult)
-                            {
-                                case 1:
-                                    break;
-                                case 2:
-                                    tupleStr = "ダブル・";
-                                    break;
-                                case 3:
-                                    tupleStr = "トリプル・";
-                                    break;
-                                case 4:
-                                    tupleStr = "カルテット・";
-                                    break;
-                                default:
-                                    break;
-                            }
+                            StuntResults.Add(new InsaneStuntBonusResult(_currentVehicle, distance2d, stuntHeight, _flipCount, _totalHeadingRotation, (uint)Game.GameTime));
                         }
                         else
                         {
-                            switch (stuntBonusMult)
-                            {
-                                case 1:
-                                    break;
-                                case 2:
-                                    tupleStr = "DOUBLE ";
-                                    break;
-                                case 3:
-                                    tupleStr = "TRIPLE ";
-                                    break;
-                                case 4:
-                                    tupleStr = "QUADRUPLE ";
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-
-                        if (Game.Language == Language.Japanese)
-                        {
-                            GtaNativeUtil.ShowSubtitle(String.Format("{0}クレイジースタントボーナス！ {1}ドル", tupleStr, bonusMoney), 2000, false);
-                            GtaNativeUtil.ShowSubtitle(String.Format("距離: {0}m 高さ: {1}m 縦回転: {2} 横回転: {3}度", distance2d, stuntHeight, _stuntFlipCount, _stuntTotalRotation), 5000, false);
-                        }
-                        else
-                        {
-                            GtaNativeUtil.ShowSubtitle(String.Format("{0}INSANE STUNT BONUS: ${1}", tupleStr, bonusMoney), 2000, false);
-                            GtaNativeUtil.ShowSubtitle(String.Format("Distance: {0}m Height: {1}m Flips: {2} Rotation: {3}°", distance2d, stuntHeight, _stuntFlipCount, _stuntTotalRotation), 5000, false);
+                            var bonusMoney = CalculateBonusMoney(distance2d, stuntHeight, _flipCount, _totalHeadingRotation, stuntBonusMult);
+                            Game.Player.Money += (int)bonusMoney;
+                            ShowInsaneStuntResult(distance2d, stuntHeight, _flipCount, _totalHeadingRotation, bonusMoney, stuntBonusMult);
                         }
                     }
                 }
             }
 
+            private void ProcessStuntResult(List<InsaneStuntBonusResult> results)
+            {
+                results.RemoveAll(x => !x.Vehicle.ExistsSafe() && x.Vehicle.IsDead);
 
+                var player = Game.Player.Character;
+                var gameTimeNow = Game.GameTime;
 
-            private uint GetStuntBonusMult(float stuntHeight, float distance2d, uint stuntFlipCount, float stuntRotation)
+                for (int i = results.Count - 1; i >= 0; i--)
+                {
+                    if (!player.IsInVehicle(results[i].Vehicle) || (gameTimeNow - results[i].GameTimeOnFinish) > 3000)
+                    {
+                        var distance2d = results[i].DistanceXY;
+                        var stuntHeight = results[i].StuntHeight;
+                        var flipCount = results[i].FlipCount;
+                        var totalHeadingRotation = results[i].TotalHeadingRotation;
+
+                        var stuntBonusMult = GetStuntBonusMult(distance2d, stuntHeight, flipCount, totalHeadingRotation);
+
+                        if (stuntBonusMult > 0)
+                        {
+                            var bonusMoney = CalculateBonusMoney(distance2d, stuntHeight, flipCount, totalHeadingRotation, stuntBonusMult);
+                            Game.Player.Money += (int)bonusMoney;
+                            ShowInsaneStuntResult(distance2d, stuntHeight, flipCount, totalHeadingRotation, bonusMoney, stuntBonusMult);
+                        }
+                    }
+
+                    results.RemoveAt(i);
+                }
+            }
+
+            private uint CalculateBonusMoney(float distance2d, float stuntHeight, uint stuntFlipCount, float totalHeadingRotation, uint bonusMultiplier)
+            {
+                var bonusMoney = (stuntFlipCount * 180) + ((uint)totalHeadingRotation) + ((uint)distance2d * 6) + ((uint)stuntHeight * 45);
+                bonusMoney *= bonusMultiplier;
+                bonusMoney /= 15;
+
+                return bonusMoney;
+            }
+
+            private void ShowInsaneStuntResult(float distance2d, float stuntHeight, uint stuntFlipCount, float totalHeadingRotation, uint bonusMoney, uint bonusMultiplier)
+            {
+                var tupleStr = String.Empty;
+
+                if (Game.Language == Language.Japanese)
+                {
+                    switch (bonusMultiplier)
+                    {
+                        case 1:
+                            break;
+                        case 2:
+                            tupleStr = "ダブル・";
+                            break;
+                        case 3:
+                            tupleStr = "トリプル・";
+                            break;
+                        case 4:
+                            tupleStr = "カルテット・";
+                            break;
+                        default:
+                            break;
+                    }
+    }
+                else
+                {
+                    switch (bonusMultiplier)
+                    {
+                        case 1:
+                            break;
+                        case 2:
+                            tupleStr = "DOUBLE ";
+                            break;
+                        case 3:
+                            tupleStr = "TRIPLE ";
+                            break;
+                        case 4:
+                            tupleStr = "QUADRUPLE ";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                if (Game.Language == Language.Japanese)
+                {
+                    var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
+                    ShowResult(String.Format("{0}クレイジースタントボーナス！ {1}ドル", tupleStr, bonusMoney), resultStyle, 2000);
+                    ShowResult(String.Format("距離: {0}m 高さ: {1}m 縦回転: {2} 横回転: {3}度", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation), resultStyle, 5000);
+                }
+                else
+                {
+                    var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
+                    ShowResult(String.Format("{0}INSANE STUNT BONUS: ${1}", tupleStr, bonusMoney), resultStyle, 2000);
+                    ShowResult(String.Format("Distance: {0}m Height: {1}m Flips: {2} Rotation: {3}°", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation), resultStyle, 5000);
+                }
+            }
+
+            private uint GetStuntBonusMult(float distance2d, float stuntHeight, uint stuntFlipCount, float totalHeadingRotation)
             {
                 uint stuntBonusMult = 0;
 
@@ -206,12 +264,12 @@ namespace StuntBonusV
                     stuntBonusMult++;
                 }
 
-                if (_stuntFlipCount > 2)
+                if (stuntFlipCount > 1)
                 {
                     stuntBonusMult++;
                 }
 
-                if (_stuntTotalRotation > 360f)
+                if (totalHeadingRotation > 360f)
                 {
                     stuntBonusMult++;
                 }
@@ -226,8 +284,8 @@ namespace StuntBonusV
                     return;
                 }
 
-                _stuntTotalRotation = 0;
-                _stuntFlipCount = 0;
+                _totalHeadingRotation = 0;
+                _flipCount = 0;
                 _wasFlippedInPrevFrame = false;
                 _maxVehicleZPos = float.MinValue;
                 _isStunting = true;
