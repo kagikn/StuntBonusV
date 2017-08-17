@@ -10,13 +10,13 @@ using GTA.Math;
 
 namespace StuntBonusV
 {
-    internal static partial class StuntBonusMonitor
+    public static partial class StuntBonusMonitor
     {
-        internal class InsaneStuntBonus : StuntBonusScript
+        public class InsaneStuntBonus : StuntBonusScript
         {
             #region setting
 
-            class InsaneStuntBonusSetting : Setting
+            public class InsaneStuntBonusSetting : Setting
             {
                 public bool IsPerfectLandingDetectionEnabled { get; set; } = true;
                 public bool UseNotificationsToShowResult { get; set; } = false;
@@ -52,7 +52,7 @@ namespace StuntBonusV
             {
                 Tick += OnTick;
 
-                var _setting = LoadSetting<InsaneStuntBonusSetting>();
+                _setting = LoadSetting<InsaneStuntBonusSetting>();
                 if (_setting == null || !_setting.Validate())
                 {
                     _setting = new InsaneStuntBonusSetting();

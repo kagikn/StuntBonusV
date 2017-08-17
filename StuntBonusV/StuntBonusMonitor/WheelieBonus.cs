@@ -10,13 +10,13 @@ using GTA.Math;
 
 namespace StuntBonusV
 {
-    internal static partial class StuntBonusMonitor
+    public static partial class StuntBonusMonitor
     {
-        internal class WheelieBonus : StuntBonusScript
+        public class WheelieBonus : StuntBonusScript
         {
             #region setting
 
-            class WheelieBonusSetting : Setting
+            public class WheelieBonusSetting : Setting
             {
                 public bool UseNotificationsToShowResult { get; set; } = false;
                 public override bool Validate()
@@ -46,7 +46,7 @@ namespace StuntBonusV
             {
                 Tick += OnTick;
 
-                var _setting = LoadSetting<WheelieBonusSetting>();
+                _setting = LoadSetting<WheelieBonusSetting>();
                 if (_setting == null || !_setting.Validate())
                 {
                     _setting = new WheelieBonusSetting();

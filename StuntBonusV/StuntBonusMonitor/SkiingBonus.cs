@@ -10,13 +10,13 @@ using GTA.Math;
 
 namespace StuntBonusV
 {
-    internal static partial class StuntBonusMonitor
+    public static partial class StuntBonusMonitor
     {
-        internal class SkiingBonus : StuntBonusScript
+        public class SkiingBonus : StuntBonusScript
         {
             #region setting
 
-            class SkiingBonusSetting : Setting
+            public class SkiingBonusSetting : Setting
             {
                 public bool UseNotificationsToShowResult { get; set; } = false;
                 public override bool Validate()
@@ -45,7 +45,7 @@ namespace StuntBonusV
             {
                 Tick += OnTick;
 
-                var _setting = LoadSetting<SkiingBonusSetting>();
+                _setting = LoadSetting<SkiingBonusSetting>();
                 if (_setting == null || !_setting.Validate())
                 {
                     _setting = new SkiingBonusSetting();

@@ -10,13 +10,13 @@ using GTA.Math;
 
 namespace StuntBonusV
 {
-    internal static partial class StuntBonusMonitor
+    public static partial class StuntBonusMonitor
     {
-        internal class UniqueStuntBonus : StuntBonusScript
+        public class UniqueStuntBonus : StuntBonusScript
         {
             #region setting
 
-            class UniqueStuntSetting : Setting
+            public class UniqueStuntSetting : Setting
             {
                 public int BaseAward { get; set; } = 500;
                 public bool IsBonusXEnabled { get; set; } = true;
@@ -49,7 +49,7 @@ namespace StuntBonusV
             {
                 Tick += OnTick;
 
-                var _setting = LoadSetting<UniqueStuntSetting>();
+                _setting = LoadSetting<UniqueStuntSetting>();
                 if (_setting == null || !_setting.Validate())
                 {
                     _setting = new UniqueStuntSetting();

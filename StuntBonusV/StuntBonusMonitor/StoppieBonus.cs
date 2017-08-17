@@ -10,13 +10,13 @@ using GTA.Math;
 
 namespace StuntBonusV
 {
-    internal static partial class StuntBonusMonitor
+    public static partial class StuntBonusMonitor
     {
-        internal class StoppieBonus : StuntBonusScript
+        public class StoppieBonus : StuntBonusScript
         {
             #region setting
 
-            class StoppieBonusSetting : Setting
+            public class StoppieBonusSetting : Setting
             {
                 public bool UseNotificationsToShowResult { get; set; } = false;
                 public override bool Validate()
@@ -45,7 +45,7 @@ namespace StuntBonusV
             {
                 Tick += OnTick;
 
-                var _setting = LoadSetting<StoppieBonusSetting>();
+                _setting = LoadSetting<StoppieBonusSetting>();
                 if (_setting == null || !_setting.Validate())
                 {
                     _setting = new StoppieBonusSetting();
