@@ -19,14 +19,14 @@ namespace StuntBonusV
             class UniqueStuntSetting : Setting
             {
                 public int BaseAward { get; set; } = 500;
-                public bool EnableBonusX { get; set; } = true;
-                public bool EnableLastSpecialAward { get; set; } = true;
-                public int LastAward { get; set; } = 250000;
+                public bool IsBonusXEnabled { get; set; } = true;
+                public bool IsLastSpecialAwardEnabled { get; set; } = true;
+                public int LastStuntAward { get; set; } = 250000;
 
                 public override bool Validate()
                 {
                     if (BaseAward <= 0) return false;
-                    if (EnableLastSpecialAward && LastAward <= 0) return false;
+                    if (IsLastSpecialAwardEnabled && LastStuntAward <= 0) return false;
                     return true;
                 }
             }
@@ -40,9 +40,9 @@ namespace StuntBonusV
             private int _completedUniqueStuntCount = GtaNativeUtil.GetCompletedUniqueStuntCount();
 
             private int BaseAward => _setting.BaseAward;
-            private bool EnableBonusX => _setting.EnableBonusX;
-            private bool EnableLastSpecialAward => _setting.EnableLastSpecialAward;
-            private int LastAward => _setting.LastAward;
+            private bool IsBonusXEnabled => _setting.IsBonusXEnabled;
+            private bool IsLastSpecialAwardEnabled => _setting.IsLastSpecialAwardEnabled;
+            private int LastStuntAward => _setting.LastStuntAward;
             #endregion fields
 
             protected override void Setup()
