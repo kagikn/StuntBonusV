@@ -19,10 +19,11 @@ namespace StuntBonusV
             public class InsaneStuntBonusSetting : Setting
             {
                 public bool IsPerfectLandingDetectionEnabled { get; set; } = true;
+                public float PerfectLandingHealthThreshold { get; set; } = 10f;
                 public bool UseNotificationsToShowResult { get; set; } = false;
                 public override bool Validate()
                 {
-                    return true;
+                    return PerfectLandingHealthThreshold > 0f;
                 }
             }
             public override string SettingFileName { get; } = "InsaneStuntBonus.xml";
@@ -43,6 +44,7 @@ namespace StuntBonusV
             private Vector3 _initVehiclePos = Vector3.Zero;
 
             bool IsPerfectLandingDetectionEnabled => _setting.IsPerfectLandingDetectionEnabled;
+            float PerfectLandingHealthThreshold => _setting.PerfectLandingHealthThreshold;
             bool UseNotificationsToShowResult => _setting.UseNotificationsToShowResult;
 
             List<InsaneStuntBonusResult> StuntResults = new List<InsaneStuntBonusResult>();
@@ -179,11 +181,10 @@ namespace StuntBonusV
                             var EngineHealthDiff = results[i].VehicleEngineHealth - veh.EngineHealth;
                             var FuelTankHealthDiff = results[i].VehicleFuelTankHealth - veh.PetrolTankHealth;
 
-                            const float PERFECT_LANDING_HEALTH_THRESHOLD = 35f;
                             bool perfectLanding = ( player.IsInVehicle(veh)
-                                                    && bodyHealthDiff < PERFECT_LANDING_HEALTH_THRESHOLD
-                                                    && EngineHealthDiff < PERFECT_LANDING_HEALTH_THRESHOLD
-                                                    && FuelTankHealthDiff < PERFECT_LANDING_HEALTH_THRESHOLD);
+                                                    && bodyHealthDiff < PerfectLandingHealthThreshold
+                                                    && EngineHealthDiff < PerfectLandingHealthThreshold
+                                                    && FuelTankHealthDiff < PerfectLandingHealthThreshold);
 
                             var bonusMoney = CalculateBonusMoney(distance2d, stuntHeight, flipCount, totalHeadingRotation, stuntBonusMult, perfectLanding);
                             Game.Player.Money += (int)bonusMoney;
