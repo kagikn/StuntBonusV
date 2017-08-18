@@ -63,7 +63,7 @@ namespace StuntBonusV
                 if (_completedUniqueStuntCount < currentCompletedStuntJumpCount)
                 {
                     var bonusMoney = BaseAward;
-                    if (IsLastSpecialAwardEnabled && _completedUniqueStuntCount == 50)
+                    if (IsLastSpecialAwardEnabled && currentCompletedStuntJumpCount == 50)
                     {
                         bonusMoney = LastStuntAward;
                     }
