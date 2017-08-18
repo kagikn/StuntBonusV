@@ -59,19 +59,19 @@ namespace StuntBonusV
                 if (!player.SafeExists()) { return; }
                 var playerVeh = Game.Player.Character.CurrentVehicle;
 
-                if (playerVeh.SafeExists() && _currentVehicle != playerVeh)
+                if (playerVeh.SafeExists() && (!_currentVehicle.SafeExists() || _currentVehicle != playerVeh))
                 {
                     _currentVehicle = playerVeh;
                     _isPerformingStoppie = false;
                 }
-                else if (!_currentVehicle.SafeExists())
+                else if (!_currentVehicle.SafeExists() || !player.IsInVehicle(_currentVehicle))
                 {
                     _currentVehicle = null;
                     _isPerformingStoppie = false;
                     return;
                 }
 
-                if (_currentVehicle.SafeExists() && player.IsInVehicle(_currentVehicle))
+                if (_currentVehicle.SafeExists())
                 {
                     if (_currentVehicle.IsAlive && _currentVehicle.IsInStoppie())
                     {
