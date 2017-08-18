@@ -7,7 +7,9 @@
 
 [![forthebadge](http://forthebadge.com/images/badges/60-percent-of-the-time-works-every-time.svg)](http://forthebadge.com)
 
-This script adds the ability to show one result of the 5 stunts and give the player money.
+This script adds the ability to show one result of the 5 stunts and give the player money, just like in GTA 3D Universe.
+This mod also have additional features such as using notifications to show stunt results and customizable unique stunt bonus awards.
+Let's enjoy making stunts, **to the fullest!**
 
 ## Requirements
 
