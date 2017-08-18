@@ -182,7 +182,7 @@ namespace StuntBonusV
 
             int LeftWheelCount, RightWheelCount;
             vehicle.GetLeftAndRightWheelCount(out LeftWheelCount, out RightWheelCount);
-            if (LeftWheelCount == 0 || RightWheelCount == 0)
+            if (LeftWheelCount == 0 || RightWheelCount == 0 || LeftWheelCount + RightWheelCount <= 2)
             {
                 return false;
             }
@@ -215,7 +215,7 @@ namespace StuntBonusV
                 }
             }
 
-            return (areAllLeftWheelsTouching && touchingLeftWheelCount <= 0) || (areAllRightWheelsTouching && touchingLeftWheelCount <= 0);
+            return (areAllLeftWheelsTouching && touchingRightWheelCount <= 0) || (areAllRightWheelsTouching && touchingLeftWheelCount <= 0);
         }
 
         internal static void GetLeftAndRightWheelCount(this Vehicle vehicle, out int leftWheelCount, out int rightWheelCount)
@@ -245,7 +245,8 @@ namespace StuntBonusV
 
             unsafe
             {
-                return (*((byte*)wheelAddress.ToPointer() + 0xB) & 0x80) != 0;
+                // doesn't work well with some bikes
+                return (*((byte*)wheelAddress.ToPointer() + 0x23) & 0x80) == 0;
             }
         }
 
@@ -258,8 +259,8 @@ namespace StuntBonusV
 
             unsafe
             {
-                // this bit might represent another flag actually
-                return (*((byte*)wheelAddress.ToPointer() + 0x13B) & 0x80) == 0;
+                // doesn't work well with some trailers
+                return (*((byte*)wheelAddress.ToPointer() + 0x27) & 0x80) == 0;
             }
         }
 
