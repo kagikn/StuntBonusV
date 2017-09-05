@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -131,6 +131,11 @@ namespace StuntBonusV
                 else if (_isStunting)
                 {
                     _isStunting = false;
+
+                    if (!player.IsInVehicle())
+                    {
+                        return;
+                    }
 
                     var endVehiclePos = _currentVehicle.Position;
 
