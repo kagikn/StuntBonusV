@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,6 +46,7 @@ namespace StuntBonusV
                 offset = (Game.Version >= GameVersion.VER_1_0_877_1_STEAM ? 0xAE0 : offset);
                 offset = (Game.Version >= GameVersion.VER_1_0_944_2_STEAM ? 0xB10 : offset);
                 offset = (Game.Version >= GameVersion.VER_1_0_1103_2_STEAM ? 0xB20 : offset);
+                offset = (Game.Version >= GameVersion.VER_1_0_1180_2_STEAM ? 0xB40 : offset);
 
                 return offset;
             }
