@@ -35,20 +35,11 @@ namespace StuntBonusV
 
         static VehicleExtensions()
         {
-            _WheelPtrCollectionOffset = GetWheelPtrCollectionOffset();
-            _WheelCountOffset = _WheelPtrCollectionOffset + 0x8;
-
-            int GetWheelPtrCollectionOffset()
+            unsafe
             {
-                var offset = (Game.Version >= GameVersion.VER_1_0_372_2_STEAM ? 0xAA0 : 0xA80);
-                offset = (Game.Version >= GameVersion.VER_1_0_505_2_STEAM ? 0xA90 : offset);
-                offset = (Game.Version >= GameVersion.VER_1_0_791_2_STEAM ? 0xAB0 : offset);
-                offset = (Game.Version >= GameVersion.VER_1_0_877_1_STEAM ? 0xAE0 : offset);
-                offset = (Game.Version >= GameVersion.VER_1_0_944_2_STEAM ? 0xB10 : offset);
-                offset = (Game.Version >= GameVersion.VER_1_0_1103_2_STEAM ? 0xB20 : offset);
-                offset = (Game.Version >= GameVersion.VER_1_0_1180_2_STEAM ? 0xB40 : offset);
-
-                return offset;
+                var addr = MemoryAccess.FindPattern("\x3B\xB7\x48\x0B\x00\x00\x7D\x0D", "xx????xx");
+                _WheelPtrCollectionOffset = *(int*)(addr + 2) - 8;
+                _WheelCountOffset = *(int*)(addr + 2);
             }
         }
 
