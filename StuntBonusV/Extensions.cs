@@ -267,6 +267,7 @@ namespace StuntBonusV
             {
                 var offset = Game.Version >= GameVersion.VER_1_0_372_2_STEAM ? 0x1EC : 0x1DC;
                 offset = Game.Version >= GameVersion.VER_1_0_1290_1_STEAM ? 0x1E4 : offset;
+                offset = Game.Version >= GameVersion.VER_1_0_1365_1_STEAM ? 0x1EC : offset;
                 return (*((byte*)wheelAddress.ToPointer() + offset) & 0x1) != 0;
             }
         }
