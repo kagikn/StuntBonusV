@@ -112,8 +112,10 @@ namespace StuntBonusV
             return areAnyFrontWheelsTouching && !areAnyNonFrontWheelsTouching;
         }
 
-        internal static bool IsInSkiingStunt(this Vehicle vehicle)
+        internal static bool IsInSkiingStunt(this Vehicle vehicle, out bool isSkiingWithTwoWheels)
         {
+            isSkiingWithTwoWheels = false;
+
             if (vehicle.IsOnAllWheels)
             {
                 return false;
@@ -153,7 +155,11 @@ namespace StuntBonusV
                 }
             }
 
-            return (areAllLeftWheelsTouching && touchingRightWheelCount == 0) || (areAllRightWheelsTouching && touchingLeftWheelCount == 0);
+            var isSkiing = (areAllLeftWheelsTouching && touchingRightWheelCount == 0) || (areAllRightWheelsTouching && touchingLeftWheelCount == 0);
+            if (isSkiing && (touchingLeftWheelCount == 2 || touchingRightWheelCount == 2))
+                isSkiingWithTwoWheels = true;
+
+            return isSkiing;
         }
 
         internal static void GetLeftAndRightWheelCount(this Vehicle vehicle, out int leftWheelCount, out int rightWheelCount)

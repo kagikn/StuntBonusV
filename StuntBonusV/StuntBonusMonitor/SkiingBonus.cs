@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,6 +35,7 @@ namespace StuntBonusV
             Vector3 _prevVehiclePos;
             uint _startTimeOfSkiing;
             bool _isPerformingSkiing;
+            bool _isSkiingWithTwoWheels;
             float _TotalSkiingDistance;
             const int MIN_TIME_TO_EARN_MONEY = 2000;
 
@@ -73,11 +74,12 @@ namespace StuntBonusV
 
                 if (_currentVehicle.SafeExists())
                 {
-                    if (_currentVehicle.IsAlive && _currentVehicle.IsInSkiingStunt())
+                    if (_currentVehicle.IsAlive && _currentVehicle.IsInSkiingStunt(out var isSkiingWithTwoWheels))
                     {
                         if (!_isPerformingSkiing)
                         {
                             _isPerformingSkiing = true;
+                            _isSkiingWithTwoWheels = isSkiingWithTwoWheels;
                             _startTimeOfSkiing = (uint)Game.GameTime;
                             _TotalSkiingDistance = 0f;
                             _prevVehiclePos = _currentVehicle.Position;
@@ -102,11 +104,14 @@ namespace StuntBonusV
                             var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                             if (Game.Language == Language.Japanese)
                             {
-                                ShowResult(String.Format("片輪走行ボーナス {0}ドル 距離:{1}m 時間:{2}.{3}秒", bonusMoney, _TotalSkiingDistance, timeSecs, timeMillisecs), resultStyle, 3000);
+                                    ShowResult(String.Format("片輪走行ボーナス {0}ドル 距離:{1}m 時間:{2}.{3}秒", bonusMoney, _TotalSkiingDistance, timeSecs, timeMillisecs), resultStyle, 3000);
                             }
                             else
                             {
-                                ShowResult(String.Format("SKIING BONUS: ${0} Distance: {1}m Time: {2}.{3} seconds", bonusMoney, _TotalSkiingDistance, timeSecs, timeMillisecs), resultStyle, 3000);
+                                if (_isSkiingWithTwoWheels)
+                                    ShowResult(String.Format("TWO WHEELS DOUBLE BONUS: ${0} Distance: {1}m Time: {2}.{3} seconds", bonusMoney, _TotalSkiingDistance, timeSecs, timeMillisecs), resultStyle, 3000);
+                                else
+                                    ShowResult(String.Format("SKIING BONUS: ${0} Distance: {1}m Time: {2}.{3} seconds", bonusMoney, _TotalSkiingDistance, timeSecs, timeMillisecs), resultStyle, 3000);
                             }
                         }
                     }
