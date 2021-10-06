@@ -99,19 +99,18 @@ namespace StuntBonusV
                             Game.Player.Money += bonusMoney;
 
                             var timeSecs = skiingTime / 1000;
-                            var timeMillisecs = skiingTime - timeSecs * 1000;
 
                             var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                             if (Game.Language == Language.Japanese)
                             {
-                                    ShowResult(String.Format("片輪走行ボーナス {0}ドル 距離:{1}m 時間:{2}.{3}秒", bonusMoney, _TotalSkiingDistance, timeSecs, timeMillisecs), resultStyle, 3000);
+                                    ShowResult(string.Format("片輪走行ボーナス {0}ドル 距離:{1:F2}m 時間:{2}秒", bonusMoney, _TotalSkiingDistance, timeSecs), resultStyle, 3000);
                             }
                             else
                             {
                                 if (_isSkiingWithTwoWheels)
-                                    ShowResult(String.Format("TWO WHEELS DOUBLE BONUS: ${0} Distance: {1}m Time: {2}.{3} seconds", bonusMoney, _TotalSkiingDistance, timeSecs, timeMillisecs), resultStyle, 3000);
+                                    ShowResult(string.Format("TWO WHEELS DOUBLE BONUS: ${0} Distance: {1:F2}m Time: {2} seconds", bonusMoney, _TotalSkiingDistance, timeSecs), resultStyle, 3000);
                                 else
-                                    ShowResult(String.Format("SKIING BONUS: ${0} Distance: {1}m Time: {2}.{3} seconds", bonusMoney, _TotalSkiingDistance, timeSecs, timeMillisecs), resultStyle, 3000);
+                                    ShowResult(string.Format("SKIING BONUS: ${0} Distance: {1:F2}m Time: {2} seconds", bonusMoney, _TotalSkiingDistance, timeSecs), resultStyle, 3000);
                             }
                         }
                     }

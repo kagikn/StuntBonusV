@@ -215,7 +215,7 @@ namespace StuntBonusV
 
             private void ShowInsaneStuntResult(float distance2d, float stuntHeight, uint stuntFlipCount, float totalHeadingRotation, uint bonusMoney, uint bonusMultiplier, bool perfectLanding)
             {
-                var tupleStr = String.Empty;
+                var tupleStr = string.Empty;
 
                 if (Game.Language == Language.Japanese)
                 {
@@ -261,15 +261,15 @@ namespace StuntBonusV
                 {
                     var perfectLandingStr1 = perfectLanding ? "パーフェクト" : string.Empty;
                     var perfectLandingStr2 = perfectLanding ? "~n~おまけに完璧な着地だ！" : string.Empty;
-                    ShowResult(String.Format("{0}{2}クレイジースタントボーナス！ {1}ドル", tupleStr, bonusMoney, perfectLandingStr1), resultStyle, 2000);
-                    ShowResult(String.Format("距離: {0}m 高さ: {1}m 縦回転: {2} 横回転: {3}度{4}", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation, perfectLandingStr2), resultStyle, 5000);
+                    ShowResult(string.Format("{0}{2}クレイジースタントボーナス！ {1}ドル", tupleStr, bonusMoney, perfectLandingStr1), resultStyle, 2000);
+                    ShowResult(string.Format("距離: {0:F2}m 高さ: {1:F2}m 縦回転: {2} 横回転: {3}度{4}", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation, perfectLandingStr2), resultStyle, 5000);
                 }
                 else
                 {
                     var perfectLandingStr1 = perfectLanding ? "PERFECT " : string.Empty;
                     var perfectLandingStr2 = perfectLanding ? "~n~And what a great landing!" : string.Empty;
-                    ShowResult(String.Format("{2}{0}INSANE STUNT BONUS: ${1}", tupleStr, bonusMoney, perfectLandingStr1), resultStyle, 2000);
-                    ShowResult(String.Format("Distance: {0}m Height: {1}m Flips: {2} Rotation: {3}°{4}", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation, perfectLandingStr2), resultStyle, 5000);
+                    ShowResult(string.Format("{2}{0}INSANE STUNT BONUS: ${1}", tupleStr, bonusMoney, perfectLandingStr1), resultStyle, 2000);
+                    ShowResult(string.Format("Distance: {0:F2}m Height: {1:F2}m Flips: {2} Rotation: {3}°{4}", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation, perfectLandingStr2), resultStyle, 5000);
                 }
             }
 

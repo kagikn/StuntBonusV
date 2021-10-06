@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -97,17 +97,16 @@ namespace StuntBonusV
                             Game.Player.Money += bonusMoney;
 
                             var timeSecs = stoppieTime / 1000;
-                            var timeMillisecs = stoppieTime - timeSecs * 1000;
 
                             var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                             if (Game.Language == Language.Japanese)
                             {
-                                ShowResult(String.Format("ジャックナイフボーナス {0}ドル 距離:{1}m 時間:{2}.{3}秒", bonusMoney, _TotalStoppieDistance, timeSecs, timeMillisecs), resultStyle, 3000);
+                                ShowResult(string.Format("ジャックナイフボーナス {0}ドル 距離:{1}m 時間:{2}秒", bonusMoney, _TotalStoppieDistance, timeSecs), resultStyle, 3000);
                             }
 
                             else
                             {
-                                ShowResult(String.Format("STOPPIE BONUS: ${0} Distance: {1}m Time: {2}.{3} seconds", bonusMoney, _TotalStoppieDistance, timeSecs, timeMillisecs), resultStyle, 3000);
+                                ShowResult(string.Format("STOPPIE BONUS: ${0} Distance: {1}m Time: {2} seconds", bonusMoney, _TotalStoppieDistance, timeSecs), resultStyle, 3000);
                             }
                         }
                     }
