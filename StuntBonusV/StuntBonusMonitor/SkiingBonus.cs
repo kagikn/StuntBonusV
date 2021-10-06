@@ -108,9 +108,9 @@ namespace StuntBonusV
                             else
                             {
                                 if (_isSkiingWithTwoWheels)
-                                    ShowResult(string.Format("TWO WHEELS DOUBLE BONUS: ${0} Distance: {1:F2}m Time: {2} seconds", bonusMoney, _TotalSkiingDistance, timeSecs), resultStyle, 3000);
+                                    ShowResult($"TWO WHEELS DOUBLE BONUS: ${bonusMoney} Distance: {_TotalSkiingDistance:F2}m Time: {timeSecs} seconds", resultStyle, 3000);
                                 else
-                                    ShowResult(string.Format("SKIING BONUS: ${0} Distance: {1:F2}m Time: {2} seconds", bonusMoney, _TotalSkiingDistance, timeSecs), resultStyle, 3000);
+                                    ShowResult($"SKIING BONUS: ${bonusMoney} Distance: {_TotalSkiingDistance:F2}m Time: {timeSecs} seconds", resultStyle, 3000);
                             }
                         }
                     }

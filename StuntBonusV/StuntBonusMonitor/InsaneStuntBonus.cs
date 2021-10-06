@@ -149,13 +149,13 @@ namespace StuntBonusV
                     {
                         if (IsPerfectLandingDetectionEnabled)
                         {
-                            StuntResults.Add(new InsaneStuntBonusResult(_currentVehicle, distance2d, stuntHeight, _flipCount, _totalHeadingRotation, (uint)Game.GameTime));
+                            StuntResults.Add(new InsaneStuntBonusResult(_currentVehicle, distance2d, stuntHeight, _flipCount, (int)_totalHeadingRotation, (uint)Game.GameTime));
                         }
                         else
                         {
                             var bonusMoney = CalculateBonusMoney(distance2d, stuntHeight, _flipCount, _totalHeadingRotation, stuntBonusMult, false);
                             Game.Player.Money += (int)bonusMoney;
-                            ShowInsaneStuntResult(distance2d, stuntHeight, _flipCount, _totalHeadingRotation, bonusMoney, stuntBonusMult, false);
+                            ShowInsaneStuntResult(distance2d, stuntHeight, _flipCount, (int)_totalHeadingRotation, bonusMoney, stuntBonusMult, false);
                         }
                     }
                 }
@@ -193,7 +193,7 @@ namespace StuntBonusV
 
                             var bonusMoney = CalculateBonusMoney(distance2d, stuntHeight, flipCount, totalHeadingRotation, stuntBonusMult, perfectLanding);
                             Game.Player.Money += (int)bonusMoney;
-                            ShowInsaneStuntResult(distance2d, stuntHeight, flipCount, totalHeadingRotation, bonusMoney, stuntBonusMult, perfectLanding);
+                            ShowInsaneStuntResult(distance2d, stuntHeight, flipCount, (int)totalHeadingRotation, bonusMoney, stuntBonusMult, perfectLanding);
                         }
                         results.RemoveAt(i);
                     }
@@ -213,7 +213,7 @@ namespace StuntBonusV
                 return bonusMoney;
             }
 
-            private void ShowInsaneStuntResult(float distance2d, float stuntHeight, uint stuntFlipCount, float totalHeadingRotation, uint bonusMoney, uint bonusMultiplier, bool perfectLanding)
+            private void ShowInsaneStuntResult(float distance2d, float stuntHeight, uint stuntFlipCount, int totalHeadingRotationInt, uint bonusMoney, uint bonusMultiplier, bool perfectLanding)
             {
                 var tupleStr = string.Empty;
 
@@ -261,15 +261,15 @@ namespace StuntBonusV
                 {
                     var perfectLandingStr1 = perfectLanding ? "パーフェクト" : string.Empty;
                     var perfectLandingStr2 = perfectLanding ? "~n~おまけに完璧な着地だ！" : string.Empty;
-                    ShowResult(string.Format("{0}{2}クレイジースタントボーナス！ {1}ドル", tupleStr, bonusMoney, perfectLandingStr1), resultStyle, 2000);
-                    ShowResult(string.Format("距離: {0:F2}m 高さ: {1:F2}m 縦回転: {2} 横回転: {3}度{4}", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation, perfectLandingStr2), resultStyle, 5000);
+                    ShowResult($"{tupleStr}{perfectLandingStr1}クレイジースタントボーナス！ {bonusMoney}ドル", resultStyle, 2000);
+                    ShowResult($"距離: {distance2d:F2}m 高さ: {stuntHeight:F2}m 縦回転: {stuntFlipCount} 横回転: {totalHeadingRotationInt}度{perfectLandingStr2}", resultStyle, 5000);
                 }
                 else
                 {
                     var perfectLandingStr1 = perfectLanding ? "PERFECT " : string.Empty;
                     var perfectLandingStr2 = perfectLanding ? "~n~And what a great landing!" : string.Empty;
-                    ShowResult(string.Format("{2}{0}INSANE STUNT BONUS: ${1}", tupleStr, bonusMoney, perfectLandingStr1), resultStyle, 2000);
-                    ShowResult(string.Format("Distance: {0:F2}m Height: {1:F2}m Flips: {2} Rotation: {3}°{4}", distance2d, stuntHeight, stuntFlipCount, totalHeadingRotation, perfectLandingStr2), resultStyle, 5000);
+                    ShowResult($"{tupleStr}{perfectLandingStr1}INSANE STUNT BONUS: ${bonusMoney}", resultStyle, 2000);
+                    ShowResult($"Distance: {distance2d:F2}m Height: {stuntHeight:F2}m Flips: {stuntFlipCount} Rotation: {totalHeadingRotationInt}°{perfectLandingStr2}", resultStyle, 5000);
                 }
             }
 

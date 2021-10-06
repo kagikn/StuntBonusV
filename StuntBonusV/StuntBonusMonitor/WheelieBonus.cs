@@ -105,11 +105,11 @@ namespace StuntBonusV
                             var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                             if (Game.Language == Language.Japanese)
                             {
-                                ShowResult(string.Format("ウィリーボーナス {0}ドル 距離:{1:F2}m 時間:{2}秒", bonusMoney, _TotalWheelieDistance, timeSecs), resultStyle, 3000);
+                                ShowResult($"ウィリーボーナス {bonusMoney}ドル 距離:{_TotalWheelieDistance.ToString("F2")}m 時間:{timeSecs}秒", resultStyle, 3000);
                             }
                             else
                             {
-                                ShowResult(string.Format("WHEELIE BONUS: ${0} Distance: {1:F2}m Time: {2} seconds", bonusMoney, _TotalWheelieDistance, timeSecs), resultStyle, 3000);
+                                ShowResult($"WHEELIE BONUS: ${bonusMoney} Distance: {_TotalWheelieDistance.ToString("F2")}m Time: {timeSecs} seconds", resultStyle, 3000);
                             }
                         }
                     }
