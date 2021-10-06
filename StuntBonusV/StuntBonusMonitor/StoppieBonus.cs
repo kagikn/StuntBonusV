@@ -99,14 +99,21 @@ namespace StuntBonusV
                             var timeSecs = stoppieTime / 1000;
 
                             var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
-                            if (Game.Language == Language.Japanese)
+                            if (Game.MeasurementSystem == MeasurementSystem.Metric)
                             {
-                                ShowResult($"ジャックナイフボーナス {bonusMoney}ドル 距離:{_TotalStoppieDistance:F2}m 時間:{timeSecs}秒", resultStyle, 3000);
+                                if (Game.Language == Language.Japanese)
+                                    ShowResult($"ジャックナイフボーナス {bonusMoney}ドル 距離:{_TotalStoppieDistance:F2}m 時間:{timeSecs}秒", resultStyle, 3000);
+                                else
+                                    ShowResult($"STOPPIE BONUS: ${bonusMoney} Distance: {_TotalStoppieDistance:F2}m Time: {timeSecs} seconds", resultStyle, 3000);
                             }
-
                             else
                             {
-                                ShowResult($"STOPPIE BONUS: ${bonusMoney} Distance: {_TotalStoppieDistance:F2}m Time: {timeSecs} seconds", resultStyle, 3000);
+                                var totalStoppieDistanceFeetInt = (int)MathUtil.MeterToFeet(_TotalStoppieDistance);
+
+                                if (Game.Language == Language.Japanese)
+                                    ShowResult($"ジャックナイフボーナス {bonusMoney}ドル 距離:{totalStoppieDistanceFeetInt}フィート 時間:{timeSecs}秒", resultStyle, 3000);
+                                else
+                                    ShowResult($"STOPPIE BONUS: ${bonusMoney} Distance: {totalStoppieDistanceFeetInt}ft Time: {timeSecs} seconds", resultStyle, 3000);
                             }
                         }
                     }

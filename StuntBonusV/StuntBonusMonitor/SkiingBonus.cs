@@ -103,14 +103,32 @@ namespace StuntBonusV
                             var resultStyle = UseNotificationsToShowResult ? ShowingResultStyle.Notification : ShowingResultStyle.Subtitle;
                             if (Game.Language == Language.Japanese)
                             {
-                                    ShowResult(string.Format("片輪走行ボーナス {0}ドル 距離:{1:F2}m 時間:{2}秒", bonusMoney, _TotalSkiingDistance, timeSecs), resultStyle, 3000);
+                                if (Game.MeasurementSystem == MeasurementSystem.Metric)
+                                    ShowResult($"片輪走行ボーナス {bonusMoney}ドル 距離:{_TotalSkiingDistance:F2}m 時間:{timeSecs}秒", resultStyle, 3000);
+                                else
+                                {
+                                    var totalSkiingDistanceFeetInt = (int)MathUtil.MeterToFeet(_TotalSkiingDistance);
+                                    ShowResult($"片輪走行ボーナス {bonusMoney}ドル 距離:{totalSkiingDistanceFeetInt}フィート 時間:{timeSecs}秒", resultStyle, 3000);
+                                }
                             }
                             else
                             {
-                                if (_isSkiingWithTwoWheels)
-                                    ShowResult($"TWO WHEELS DOUBLE BONUS: ${bonusMoney} Distance: {_TotalSkiingDistance:F2}m Time: {timeSecs} seconds", resultStyle, 3000);
+                                if (Game.MeasurementSystem == MeasurementSystem.Metric)
+                                {
+                                    if (_isSkiingWithTwoWheels)
+                                        ShowResult($"TWO WHEELS DOUBLE BONUS: ${bonusMoney} Distance: {_TotalSkiingDistance:F2}m Time: {timeSecs} seconds", resultStyle, 3000);
+                                    else
+                                        ShowResult($"SKIING BONUS: ${bonusMoney} Distance: {_TotalSkiingDistance:F2}m Time: {timeSecs} seconds", resultStyle, 3000);
+                                }
                                 else
-                                    ShowResult($"SKIING BONUS: ${bonusMoney} Distance: {_TotalSkiingDistance:F2}m Time: {timeSecs} seconds", resultStyle, 3000);
+                                {
+                                    var totalSkiingDistanceFeetInt = (int)MathUtil.MeterToFeet(_TotalSkiingDistance);
+
+                                    if (_isSkiingWithTwoWheels)
+                                        ShowResult($"TWO WHEELS DOUBLE BONUS: ${bonusMoney} Distance: {totalSkiingDistanceFeetInt}ft Time: {timeSecs} seconds", resultStyle, 3000);
+                                    else
+                                        ShowResult($"SKIING BONUS: ${bonusMoney} Distance: {totalSkiingDistanceFeetInt}ft Time: {timeSecs} seconds", resultStyle, 3000);
+                                }
                             }
                         }
                     }

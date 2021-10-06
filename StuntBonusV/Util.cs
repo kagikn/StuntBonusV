@@ -48,84 +48,8 @@ namespace StuntBonusV
         }
     }
 
-    internal static class Util
+    internal static class MathUtil
     {
-        internal static string DllPath { get; } = Path.GetDirectoryName((new Uri(Assembly.GetExecutingAssembly().CodeBase)).LocalPath);
-        internal static string SettingRootPath { get; } = DllPath + Path.DirectorySeparatorChar + "StuntBonusV";
-
-        internal static string[] ToSlicedStrings(string input, int maxByteLengthPerString = 99)
-        {
-            var utf8ByteCount = Encoding.UTF8.GetByteCount(input);
-
-            if (utf8ByteCount == input.Length)
-            {
-                return ToSlicedForAscii(input, maxByteLengthPerString);
-            }
-            else
-            {
-                return ToSlicedForMultibyteStr(input, maxByteLengthPerString);
-            }
-        }
-
-        private static string[] ToSlicedForAscii(string input, int maxByteLengthPerString = 99)
-        {
-            var initListCapacity = input.Length / maxByteLengthPerString;
-            if (input.Length % maxByteLengthPerString > 0)
-            {
-                initListCapacity += 1;
-            }
-
-            var stringArray = new string[initListCapacity];
-
-            for (int i = 0; i < initListCapacity; i++)
-            {
-                stringArray[i] = (input.Substring(i * maxByteLengthPerString, System.Math.Min(maxByteLengthPerString, input.Length - i * maxByteLengthPerString)));
-            }
-
-            return stringArray;
-        }
-
-        private static string[] ToSlicedForMultibyteStr(string input, int maxByteLengthPerString = 99)
-        {
-            if (maxByteLengthPerString < 0)
-            {
-                throw new ArgumentOutOfRangeException("maxLengthPerString");
-            }
-            if (string.IsNullOrEmpty(input) || maxByteLengthPerString == 0)
-            {
-                return new string[0];
-            }
-
-            var enc = Encoding.UTF8;
-
-            var utf8ByteCount = enc.GetByteCount(input);
-            if (utf8ByteCount < maxByteLengthPerString)
-            {
-                return new string[] { input };
-            }
-
-            var initListCapacity = utf8ByteCount / maxByteLengthPerString;
-            if (utf8ByteCount % maxByteLengthPerString > 0)
-            {
-                initListCapacity += 1;
-            }
-
-            var stringList = new List<string>(initListCapacity);
-            var startIndex = 0;
-
-            for (int i = 0; i < input.Length; i++)
-            {
-                var length = i - startIndex;
-                if (enc.GetByteCount(input.Substring(startIndex, length)) > maxByteLengthPerString)
-                {
-                    stringList.Add(input.Substring(startIndex, length - 1));
-                    i -= 1;
-                    startIndex = (startIndex + length - 1);
-                }
-            }
-            stringList.Add(input.Substring(startIndex, input.Length - startIndex));
-
-            return stringList.ToArray();
-        }
+        public static double MeterToFeet(double meter) => meter * 0.3048;
     }
 }

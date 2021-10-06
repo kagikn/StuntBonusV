@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,10 +16,13 @@ namespace StuntBonusV
     public abstract class StuntBonusScript : Script
     {
         public virtual string SettingFileName => null;
+        public readonly string SettingRootPath;
 
         public StuntBonusScript()
         {
            Interval = 0;
+           SettingRootPath = BaseDirectory + Path.DirectorySeparatorChar + "StuntBonusV";
+
            Setup();
         }
 
@@ -32,7 +35,7 @@ namespace StuntBonusV
                 throw new InvalidOperationException("The Internal setting path string is empty!");
             }
 
-            var settingFilePath = Util.SettingRootPath + Path.DirectorySeparatorChar + SettingFileName;
+            var settingFilePath = SettingRootPath + Path.DirectorySeparatorChar + SettingFileName;
             var loader = new SettingLoader<T>();
             var setting = loader.Load(settingFilePath);
 
@@ -44,12 +47,12 @@ namespace StuntBonusV
             {
                 throw new InvalidOperationException("The Internal setting path string is empty!");
             }
-            if (!Directory.Exists(Util.SettingRootPath))
+            if (!Directory.Exists(SettingRootPath))
             {
-                Directory.CreateDirectory(Util.SettingRootPath);
+                Directory.CreateDirectory(SettingRootPath);
             }            
 
-            var settingFilePath = Util.SettingRootPath + Path.DirectorySeparatorChar + SettingFileName;
+            var settingFilePath = SettingRootPath + Path.DirectorySeparatorChar + SettingFileName;
             var loader = new SettingLoader<T>();
             loader.Save(settingFilePath, value);
         }

@@ -262,14 +262,32 @@ namespace StuntBonusV
                     var perfectLandingStr1 = perfectLanding ? "パーフェクト" : string.Empty;
                     var perfectLandingStr2 = perfectLanding ? "~n~おまけに完璧な着地だ！" : string.Empty;
                     ShowResult($"{tupleStr}{perfectLandingStr1}クレイジースタントボーナス！ {bonusMoney}ドル", resultStyle, 2000);
-                    ShowResult($"距離: {distance2d:F2}m 高さ: {stuntHeight:F2}m 縦回転: {stuntFlipCount} 横回転: {totalHeadingRotationInt}度{perfectLandingStr2}", resultStyle, 5000);
+                    if (Game.MeasurementSystem == MeasurementSystem.Metric)
+                    {
+                        ShowResult($"距離: {distance2d:F2}m 高さ: {stuntHeight:F2}m 縦回転: {stuntFlipCount} 横回転: {totalHeadingRotationInt}度{perfectLandingStr2}", resultStyle, 5000);
+                    }
+                    else
+                    {
+                        var distance2dFeetInt = (int)MathUtil.MeterToFeet(distance2d);
+                        var stuntHeightFeetInt = (int)MathUtil.MeterToFeet(stuntHeight);
+                        ShowResult($"距離: {distance2dFeetInt}フィート 高さ: {stuntHeightFeetInt}フィート 縦回転: {stuntFlipCount} 横回転: {totalHeadingRotationInt}度{perfectLandingStr2}", resultStyle, 5000);
+                    }
                 }
                 else
                 {
                     var perfectLandingStr1 = perfectLanding ? "PERFECT " : string.Empty;
                     var perfectLandingStr2 = perfectLanding ? "~n~And what a great landing!" : string.Empty;
                     ShowResult($"{tupleStr}{perfectLandingStr1}INSANE STUNT BONUS: ${bonusMoney}", resultStyle, 2000);
-                    ShowResult($"Distance: {distance2d:F2}m Height: {stuntHeight:F2}m Flips: {stuntFlipCount} Rotation: {totalHeadingRotationInt}°{perfectLandingStr2}", resultStyle, 5000);
+                    if (Game.MeasurementSystem == MeasurementSystem.Metric)
+                    {
+                        ShowResult($"Distance: {distance2d:F2}m Height: {stuntHeight:F2}m Flips: {stuntFlipCount} Rotation: {totalHeadingRotationInt}°{perfectLandingStr2}", resultStyle, 5000);
+                    }
+                    else
+                    {
+                        var distance2dFeetInt = (int)MathUtil.MeterToFeet(distance2d);
+                        var stuntHeightFeetInt = (int)MathUtil.MeterToFeet(stuntHeight);
+                        ShowResult($"Distance: {distance2dFeetInt}ft Height: {stuntHeightFeetInt}ft Flips: {stuntFlipCount} Rotation: {totalHeadingRotationInt}°{perfectLandingStr2}", resultStyle, 5000);
+                    }
                 }
             }
 
