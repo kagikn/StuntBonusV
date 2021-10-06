@@ -36,10 +36,11 @@ namespace StuntBonusV
             private float _totalHeadingRotation = 0;
             private float _prevVehicleHeading = 0;
             private uint _flipCount = 0;
+            private bool _wasSpecialFeaturesThatHelpFlyingUsed = false;
             private bool _wasFlippedInPrevFrame = true;
             private bool _isStunting = false;
             private float _maxVehicleZPos = float.MinValue;
-            private Vehicle _currentVehicle = null;
+            private Vehicle _currentStuntingVehicle = null;
             private Vector3 _currentVehiclePos = Vector3.Zero;
             private Vector3 _initVehiclePos = Vector3.Zero;
 
@@ -77,42 +78,61 @@ namespace StuntBonusV
                 }
 
                 var playerVeh = player.CurrentVehicle;
+                var currentStuntingVehicle = _currentStuntingVehicle;
 
-                if (playerVeh.SafeExists() && playerVeh.IsQualifiedForInsaneStunt() && (_currentVehicle == null || _currentVehicle != playerVeh))
+                if (playerVeh.SafeExists() && playerVeh != currentStuntingVehicle && playerVeh.IsQualifiedForInsaneStunt())
                 {
-                    _currentVehicle = playerVeh;
+                    currentStuntingVehicle = playerVeh;
+                    _currentStuntingVehicle = playerVeh;
                     _isStunting = false;
+                    _wasSpecialFeaturesThatHelpFlyingUsed = false;
                 }
 
-                if (!_currentVehicle.SafeExists())
+                if (!currentStuntingVehicle.SafeExists())
                 {
-                    _currentVehicle = null;
+                    _currentStuntingVehicle = null;
+                    _wasSpecialFeaturesThatHelpFlyingUsed = false;
                     _isStunting = false;
+
                     return;
                 }
 
-                if (player.IsInVehicle(_currentVehicle) && _currentVehicle.IsAlive && _currentVehicle.IsInAir)
+                if (!_wasSpecialFeaturesThatHelpFlyingUsed && currentStuntingVehicle.IsSpecialAbilityThatHelpFlyingUsing())
+                {
+                    _wasSpecialFeaturesThatHelpFlyingUsed = true;
+                    _isStunting = false;
+                }
+
+                if (_wasSpecialFeaturesThatHelpFlyingUsed)
+                {
+                    if (!currentStuntingVehicle.IsInAir)
+                        _wasSpecialFeaturesThatHelpFlyingUsed = false;
+
+                    return;
+                }
+                else if (currentStuntingVehicle.IsInAir)
                 {
                     if (!_isStunting)
                     {
-                        InitInsaneStuntVars(_currentVehicle);
+                        InitInsaneStuntVars(currentStuntingVehicle);
                     }
 
-                    _currentVehiclePos = _currentVehicle.Position;
+                    _currentVehiclePos = currentStuntingVehicle.Position;
+                    var vehIsUpsideDown = currentStuntingVehicle.IsUpsideDown;
 
-                    if (!_currentVehicle.IsUpsideDown && _wasFlippedInPrevFrame)
+                    if (!vehIsUpsideDown && _wasFlippedInPrevFrame)
                     {
                         _wasFlippedInPrevFrame = false;
                     }
-                    else if (_currentVehicle.IsUpsideDown && !_wasFlippedInPrevFrame)
+                    else if (vehIsUpsideDown && !_wasFlippedInPrevFrame)
                     {
                         _flipCount += 1;
                         _wasFlippedInPrevFrame = true;
                     }
 
-                    if (_currentVehicle.Heading != _prevVehicleHeading)
+                    var currentHeading = currentStuntingVehicle.Heading;
+                    if (currentHeading != _prevVehicleHeading)
                     {
-                        var currentHeading = _currentVehicle.Heading;
                         var deltaHeading = Math.Abs(currentHeading - _prevVehicleHeading);
                         _prevVehicleHeading = currentHeading;
 
@@ -137,7 +157,7 @@ namespace StuntBonusV
                         return;
                     }
 
-                    var endVehiclePos = _currentVehicle.Position;
+                    var endVehiclePos = currentStuntingVehicle.Position;
 
                     var stuntHeight = _maxVehicleZPos - _initVehiclePos.Z;
 
@@ -149,7 +169,7 @@ namespace StuntBonusV
                     {
                         if (IsPerfectLandingDetectionEnabled)
                         {
-                            StuntResults.Add(new InsaneStuntBonusResult(_currentVehicle, distance2d, stuntHeight, _flipCount, (int)_totalHeadingRotation, (uint)Game.GameTime));
+                            StuntResults.Add(new InsaneStuntBonusResult(currentStuntingVehicle, distance2d, stuntHeight, _flipCount, (int)_totalHeadingRotation, (uint)Game.GameTime));
                         }
                         else
                         {
@@ -206,7 +226,7 @@ namespace StuntBonusV
                 bonusMoney *= bonusMultiplier;
                 if (perfectLanding)
                 {
-                    bonusMultiplier *= 2;
+                    bonusMoney *= 2;
                 }
                 bonusMoney /= 15;
 
