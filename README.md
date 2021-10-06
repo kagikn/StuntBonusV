@@ -1,6 +1,6 @@
 # Stunt Bonus V
 
-[![Build status (master)](https://img.shields.io/appveyor/ci/kagikn/glowingpickups.svg?style=flat-square)](https://ci.appveyor.com/project/kagikn/stuntbonusv)
+[![Build status (main)](https://img.shields.io/appveyor/ci/kagikn/stuntbonusv.svg?style=flat-square)](https://ci.appveyor.com/project/kagikn/stuntbonusv)
 [![Release](https://img.shields.io/github/release/kagikn/StuntBonusV.svg?style=flat-square)](https://github.com/kagikn/StuntBonusV/releases/latest)
 [![GitHub total downloads](https://img.shields.io/github/downloads/kagikn/StuntBonusV/total.svg?style=flat-square)](https://github.com/kagikn/StuntBonusV/releases)
 [![License](https://img.shields.io/github/license/kagikn/StuntBonusV.svg?style=flat-square)](./LICENSE.md)
