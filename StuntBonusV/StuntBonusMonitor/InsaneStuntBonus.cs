@@ -190,21 +190,22 @@ namespace StuntBonusV
 
                 for (int i = results.Count - 1; i >= 0; i--)
                 {
-                    if (!player.IsInVehicle(results[i].Vehicle) || (gameTimeNow - results[i].GameTimeOnFinish) > 3000)
+                    var result = results[i];
+                    if (!player.IsInVehicle(result.Vehicle) || (gameTimeNow - result.GameTimeOnFinish) > 3000)
                     {
-                        var distance2d = results[i].DistanceXY;
-                        var stuntHeight = results[i].StuntHeight;
-                        var flipCount = results[i].FlipCount;
-                        var totalHeadingRotation = results[i].TotalHeadingRotation;
+                        var distance2d = result.DistanceXY;
+                        var stuntHeight = result.StuntHeight;
+                        var flipCount = result.FlipCount;
+                        var totalHeadingRotation = result.TotalHeadingRotation;
 
                         var stuntBonusMult = GetStuntBonusMult(distance2d, stuntHeight, flipCount, totalHeadingRotation);
 
                         if (stuntBonusMult > 0)
                         {
-                            var veh = results[i].Vehicle;
-                            var bodyHealthDiff = results[i].VehicleBodyHealth - veh.BodyHealth;
-                            var EngineHealthDiff = results[i].VehicleEngineHealth - veh.EngineHealth;
-                            var FuelTankHealthDiff = results[i].VehicleFuelTankHealth - veh.PetrolTankHealth;
+                            var veh = result.Vehicle;
+                            var bodyHealthDiff = result.VehicleBodyHealth - veh.BodyHealth;
+                            var EngineHealthDiff = result.VehicleEngineHealth - veh.EngineHealth;
+                            var FuelTankHealthDiff = result.VehicleFuelTankHealth - veh.PetrolTankHealth;
 
                             bool perfectLanding = ( player.IsInVehicle(veh)
                                                     && bodyHealthDiff < PerfectLandingHealthThreshold
