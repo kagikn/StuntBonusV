@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using GTA;
+using GTA.UI;
 using GTA.Native;
 using GTA.Math;
 
@@ -22,20 +23,7 @@ namespace StuntBonusV
         /// <param name="blinking">if set to <c>true</c> the notification will blink.</param>
         public static void ShowNotification(string message, bool blinking = false)
         {
-            if (string.IsNullOrEmpty(message))
-            {
-                return;
-            }
-
-            Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, "CELL_EMAIL_BCON");
-            const int maxBytes = 99;
-
-            foreach (var str in Util.ToSlicedStrings(message, maxBytes))
-            {
-                Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, str);
-            }
-
-            Function.Call(Hash._DRAW_NOTIFICATION, blinking, true);
+            Notification.Show(message, blinking);
         }
 
         /// <summary>
@@ -46,20 +34,7 @@ namespace StuntBonusV
         /// <param name="drawsImmediately">if set to <c>true</c> the message will be drawn immediately; otherwise, the message will be drawn after the previous subtitle has finished.</param>
         internal static void ShowSubtitle(string message, int duration = 2500, bool drawsImmediately = true)
         {
-            if (string.IsNullOrEmpty(message))
-            {
-                return;
-            }
-
-            Function.Call(Hash._SET_TEXT_ENTRY_2, "CELL_EMAIL_BCON");
-            const int maxBytes = 99;
-
-            foreach (var str in Util.ToSlicedStrings(message, maxBytes))
-            {
-                Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, str);
-            }
-
-            Function.Call(Hash._DRAW_SUBTITLE_TIMED, duration, drawsImmediately);
+            Screen.ShowSubtitle(message, duration, drawsImmediately);
         }
 
         internal static int GetCompletedUniqueStuntCount()

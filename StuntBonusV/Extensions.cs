@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using GTA;
 using GTA.Native;
+using System.Collections.ObjectModel;
 
 namespace StuntBonusV
 {
@@ -18,151 +19,97 @@ namespace StuntBonusV
 
         internal static void PlayAmbientSpeech(this Ped ped, string speechName)
         {
-            Function.Call(Hash._PLAY_AMBIENT_SPEECH1, ped.Handle, speechName, "SPEECH_PARAMS_STANDARD");
+            Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_NATIVE, ped.Handle, speechName, "SPEECH_PARAMS_STANDARD");
         }
 
         internal static void PlayAmbientScreamSpeech(this Ped ped, string speechName)
         {
             var voiceName = ped.Gender == Gender.Male ? "WAVELOAD_PAIN_MALE" : "WAVELOAD_PAIN_FEMALE";
-            Function.Call(Hash._PLAY_AMBIENT_SPEECH_WITH_VOICE, ped.Handle, speechName, voiceName, "SPEECH_PARAMS_FORCE_SHOUTED", 0);
+            Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_WITH_VOICE_NATIVE, ped.Handle, speechName, voiceName, "SPEECH_PARAMS_FORCE_SHOUTED", 0);
         }
     }
 
     internal static class VehicleExtensions
     {
-        readonly static int _WheelPtrCollectionOffset;
-        readonly static int _WheelCountOffset;
-
-        static VehicleExtensions()
-        {
-            unsafe
-            {
-                var addr = MemoryAccess.FindPattern("\x3B\xB7\x48\x0B\x00\x00\x7D\x0D", "xx????xx");
-                _WheelPtrCollectionOffset = *(int*)(addr + 2) - 8;
-                _WheelCountOffset = *(int*)(addr + 2);
-            }
-        }
-
-        internal static int GetWheelCount(this Vehicle vehicle)
-        {
-            unsafe
-            {
-                var vehMemoryAddress = (byte*)vehicle.MemoryAddress;
-                if (vehMemoryAddress == null)
-                {
-                    return 0;
-                }
-
-                return *(int*)(vehMemoryAddress + _WheelCountOffset);
-            }
-        }
-
-        internal static IntPtr GetWheelAddress(this Vehicle vehicle, int wheelArrayindex)
-        {
-            unsafe
-            {
-                var vehMemoryAddress = (byte*)vehicle.MemoryAddress;
-                if (vehMemoryAddress == null)
-                {
-                    return IntPtr.Zero;
-                }
-
-                var wheelCount = *(int*)(vehMemoryAddress + _WheelCountOffset);
-                if (wheelArrayindex < 0 || wheelArrayindex > wheelCount - 1)
-                {
-                    throw new ArgumentOutOfRangeException("wheelArrayindex");
-                }
-
-                var wheelCollectionPtr = (long*)(*(ulong*)(vehMemoryAddress + _WheelPtrCollectionOffset));
-                var wheelPtr = ((long*)(*(ulong*)(wheelCollectionPtr + wheelArrayindex)));
-                return new IntPtr(wheelPtr);
-            }
-        }
-
-        internal static IntPtr[] GetAllWheelAddresses(this Vehicle vehicle)
-        {
-            unsafe
-            {
-                var vehMemoryAddress = (byte*)vehicle.MemoryAddress;
-                if (vehMemoryAddress == null)
-                {
-                    return new IntPtr[0];
-                }
-
-                var wheelCount = *(int*)(vehMemoryAddress + _WheelCountOffset);
-                var wheelPtrArray = new IntPtr[wheelCount];
-                var wheelCollectionPtr = (long*)(*(ulong*)(vehMemoryAddress + _WheelPtrCollectionOffset));
-
-                for (var i = 0; i < wheelPtrArray.Length; i++)
-                {
-                    wheelPtrArray[i] = new IntPtr((long*)(*(ulong*)(wheelCollectionPtr + i)));
-                }
-                return wheelPtrArray;
-            }
-        }
+        readonly static ReadOnlyCollection<VehicleWheelBoneId> _frontWheels
+            = Array.AsReadOnly(new VehicleWheelBoneId[] { VehicleWheelBoneId.WheelLeftFront, VehicleWheelBoneId.WheelRightFront });
+        readonly static ReadOnlyCollection<VehicleWheelBoneId> _rearWheels
+            = Array.AsReadOnly(new VehicleWheelBoneId[] { VehicleWheelBoneId.WheelLeftRear, VehicleWheelBoneId.WheelRightRear });
+        readonly static ReadOnlyCollection<VehicleWheelBoneId> _leftWheels
+            = Array.AsReadOnly(new VehicleWheelBoneId[] {
+                VehicleWheelBoneId.WheelLeftFront,
+                VehicleWheelBoneId.WheelLeftRear,
+                VehicleWheelBoneId.WheelLeftMiddle1,
+                VehicleWheelBoneId.WheelLeftMiddle2,
+                VehicleWheelBoneId.WheelLeftMiddle3
+                });
+        readonly static ReadOnlyCollection<VehicleWheelBoneId> _rightWheels
+            = Array.AsReadOnly(new VehicleWheelBoneId[] {
+                VehicleWheelBoneId.WheelRightFront,
+                VehicleWheelBoneId.WheelRightRear,
+                VehicleWheelBoneId.WheelRightMiddle1,
+                VehicleWheelBoneId.WheelRightMiddle2,
+                VehicleWheelBoneId.WheelRightMiddle3
+                });
 
         internal static bool IsInWheelie(this Vehicle vehicle)
         {
-            var model = vehicle.Model;
-            //Note: Model.IsBike returns true if the vehicle model is bicycle
-            if ((!model.IsBike && !model.IsQuadbike) || vehicle.IsOnAllWheels)
+            if ((!vehicle.IsBike && !vehicle.IsQuadBike))
             {
                 return false;
             }
 
-            var wheelPtrs = GetAllWheelAddresses(vehicle);
-            var isAnyRearWheelsTouching = false;
+            var areAnyRearWheelsTouching = false;
+            var areAnyNonRearWheelsTouching = false;
 
-            foreach (var wheelPtr in wheelPtrs)
+            foreach (var wheel in vehicle.Wheels)
             {
-                if (!IsWheelTouching(wheelPtr))
+                if (!wheel.IsTouchingSurface)
                 {
                     continue;
                 }
 
-                if (!IsFrontWheel(wheelPtr))
+                if (IsRearWheel(wheel))
                 {
-                    isAnyRearWheelsTouching = true;
+                    areAnyRearWheelsTouching = true;
                 }
                 else
                 {
-                    return false;
+                    areAnyNonRearWheelsTouching = true;
                 }
             }
 
-            return isAnyRearWheelsTouching;
+            return areAnyRearWheelsTouching && !areAnyNonRearWheelsTouching;
         }
 
         internal static bool IsInStoppie(this Vehicle vehicle)
         {
-            var model = vehicle.Model;
-            //Note: Model.IsBike returns true if the vehicle model is bicycle
-            if ((!model.IsBike && !model.IsQuadbike) || vehicle.IsOnAllWheels)
+            if ((!vehicle.IsBike && !vehicle.IsQuadBike))
             {
                 return false;
             }
 
-            var wheelPtrs = GetAllWheelAddresses(vehicle);
-            var isAnyFrontWheelsTouching = false;
+            var areAnyFrontWheelsTouching = false;
+            var areAnyNonFrontWheelsTouching = false;
 
-            foreach (var wheelPtr in wheelPtrs)
+            foreach (var wheel in vehicle.Wheels)
             {
-                if (!IsWheelTouching(wheelPtr))
+                if (!wheel.IsTouchingSurface)
                 {
                     continue;
                 }
 
-                if (IsFrontWheel(wheelPtr))
+                if (IsFrontWheel(wheel))
                 {
-                    isAnyFrontWheelsTouching = true;
+                    areAnyFrontWheelsTouching = true;
                 }
                 else
                 {
-                    return false;
+                    areAnyNonFrontWheelsTouching = true;
                 }
             }
 
-            return isAnyFrontWheelsTouching;
+            return areAnyFrontWheelsTouching && !areAnyNonFrontWheelsTouching;
         }
 
         internal static bool IsInSkiingStunt(this Vehicle vehicle)
@@ -179,17 +126,16 @@ namespace StuntBonusV
                 return false;
             }
 
-            var wheelPtrs = GetAllWheelAddresses(vehicle);
             var areAllLeftWheelsTouching = true;
             var areAllRightWheelsTouching = true;
             var touchingLeftWheelCount = LeftWheelCount;
             var touchingRightWheelCount = RightWheelCount;
 
-            foreach (var wheelPtr in wheelPtrs)
+            foreach (var wheel in vehicle.Wheels)
             {
-                if (!IsWheelTouching(wheelPtr))
+                if (wheel.IsTouchingSurface)
                 {
-                    if (IsRightWheel(wheelPtr))
+                    if (IsRightWheel(wheel))
                     {
                         areAllRightWheelsTouching = false;
                         touchingRightWheelCount--;
@@ -207,7 +153,7 @@ namespace StuntBonusV
                 }
             }
 
-            return (areAllLeftWheelsTouching && touchingRightWheelCount <= 0) || (areAllRightWheelsTouching && touchingLeftWheelCount <= 0);
+            return (areAllLeftWheelsTouching && touchingRightWheelCount == 0) || (areAllRightWheelsTouching && touchingLeftWheelCount == 0);
         }
 
         internal static void GetLeftAndRightWheelCount(this Vehicle vehicle, out int leftWheelCount, out int rightWheelCount)
@@ -215,9 +161,9 @@ namespace StuntBonusV
             leftWheelCount = 0;
             rightWheelCount = 0;
 
-            foreach (var wheelPtr in vehicle.GetAllWheelAddresses())
+            foreach (var wheel in vehicle.Wheels)
             {
-                if (IsRightWheel(wheelPtr))
+                if (IsRightWheel(wheel))
                 {
                     rightWheelCount++;
                 }
@@ -228,79 +174,24 @@ namespace StuntBonusV
             }
         }
 
-        internal static bool IsRightWheel(IntPtr wheelAddress)
-        {
-            if (wheelAddress == IntPtr.Zero)
-            {
-                return false;
-            }
+        internal static bool IsLeftWheel(VehicleWheel wheel) => _leftWheels.Contains(wheel.BoneId);
+        internal static bool IsRightWheel(VehicleWheel wheel) => _rightWheels.Contains(wheel.BoneId);
+        internal static bool IsFrontWheel(VehicleWheel wheel) => _frontWheels.Contains(wheel.BoneId);
+        internal static bool IsRearWheel(VehicleWheel wheel) => _rearWheels.Contains(wheel.BoneId);
 
-            unsafe
-            {
-                // doesn't work well with some bikes
-                return (*((byte*)wheelAddress.ToPointer() + 0x23) & 0x80) == 0;
-            }
-        }
-
-        internal static bool IsFrontWheel(IntPtr wheelAddress)
-        {
-            if (wheelAddress == IntPtr.Zero)
-            {
-                return false;
-            }
-
-            unsafe
-            {
-                // doesn't work well with some trailers
-                return (*((byte*)wheelAddress.ToPointer() + 0x27) & 0x80) == 0;
-            }
-        }
-
-        internal static bool IsWheelTouching(IntPtr wheelAddress)
-        {
-            if (wheelAddress == IntPtr.Zero)
-            {
-                return false;
-            }
-
-            unsafe
-            {
-                var offset = Game.Version >= GameVersion.VER_1_0_372_2_STEAM ? 0x1EC : 0x1DC;
-                offset = Game.Version >= GameVersion.VER_1_0_1290_1_STEAM ? 0x1E4 : offset;
-                offset = Game.Version >= GameVersion.VER_1_0_1365_1_STEAM ? 0x1EC : offset;
-                return (*((byte*)wheelAddress.ToPointer() + offset) & 0x1) != 0;
-            }
-        }
-
-        static internal bool IsSubmarine(this Vehicle vehicle)
-        {
-            unsafe
-            {
-                var vehAddress = new IntPtr(vehicle.MemoryAddress);
-                if (vehicle.SafeExists() && vehicle.MemoryAddress != null)
-                {
-                    var modelInfo = Marshal.ReadIntPtr(vehAddress, 0x20);
-                    return Marshal.ReadInt32(vehAddress, 0x318) == 0xF;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-        }
+        static internal bool IsSubmarine(this Vehicle vehicle) => vehicle.IsSubmarine;
 
         static internal bool IsQualifiedForInsaneStunt(this Vehicle vehicle)
         {
-            if (vehicle.SafeExists())
-            {
-                var vehModel = vehicle.Model;
-                return !(vehModel.IsHelicopter || vehModel.IsPlane || vehModel.IsTrain || vehicle.IsSubmarine());
-            }
-            else
-            {
+            var vehType = vehicle.Type;
+            // boats, trains, and submarine cannot have wheels. Exclude VehicleType.None too, which will be returned if the vehicle does not exist from SHVDN
+            if ((uint)vehType > 12)
                 return false;
-            }
+            // return false if the vehicle type is plane, helicopter, blimp, or autogyro
+            if (vehType == VehicleType.Plane || ((uint)vehType - 8) <= 2)
+                return false;
+
+            return true;
         }
     }
 

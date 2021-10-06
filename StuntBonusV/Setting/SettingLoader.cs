@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,8 +33,6 @@ namespace StuntBonusV
                 serializer.Serialize(stream, settings);
                 return true;
             }
-
-            return false;
         }
         public T Init(string xmlPath)
         {
